@@ -28,7 +28,18 @@ class ToTicketsContractTests(unittest.TestCase):
         self.assertIn("quiz the user", skill)
         self.assertIn("until the user approves the breakdown", skill)
         self.assertIn("do not ask for another publication confirmation", skill)
-        self.assertIn("do not close or modify any parent spec", skill)
+        self.assertIn("do not close, relabel, change the status of", skill)
+        self.assertIn("native parent/sub-issue relationship", skill)
+
+    def test_local_ticket_contract_uses_configured_parent_and_state(self) -> None:
+        skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        template = skill.split("<local-ticket-template>", 1)[1].split(
+            "</local-ticket-template>", 1
+        )[0]
+
+        self.assertIn("**Parent:**", template)
+        self.assertIn("configured ready state", template)
+        self.assertIn("does not start implementing", skill)
 
     def test_skill_does_not_decide_that_tickets_are_unnecessary(self) -> None:
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8").lower()

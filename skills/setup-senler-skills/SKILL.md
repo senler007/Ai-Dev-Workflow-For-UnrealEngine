@@ -1,6 +1,6 @@
 ---
 name: setup-senler-skills
-description: Configure a repository to use the Senler skills workflow. Use when the user explicitly asks to set up Senler skills, choose a GitHub/local/custom issue tracker, or establish project-documentation paths and agent guidance.
+description: Configure a repository for the Senler workflow, including GitHub, GitLab, local, or custom tracking and project-documentation paths. Use only when the user explicitly asks for setup or reconfiguration.
 ---
 
 # Setup Senler Skills
@@ -27,8 +27,8 @@ an authoritative owner.
 
 Summarize what was found, then confirm choices that cannot be inferred safely:
 
-1. **Tracker mode.** Recommend GitHub when the Git remote identifies a GitHub
-   repository; otherwise recommend local. Also support a custom tracker.
+1. **Tracker mode.** Recommend GitHub or GitLab when the Git remote identifies
+   that host; otherwise recommend local. Also support a custom tracker.
 2. **Agent instruction file.** Update an existing instruction file. If none
    exists, ask before creating one and recommend `AGENTS.md` for Codex-first use.
 3. **Project-document locations.** Reuse existing owners. For missing roles,
@@ -51,6 +51,7 @@ or ADR documents during setup.
 Use the applicable tracker reference:
 
 - GitHub: [references/issue-tracker-github.md](references/issue-tracker-github.md)
+- GitLab: [references/issue-tracker-gitlab.md](references/issue-tracker-gitlab.md)
 - Local: [references/issue-tracker-local.md](references/issue-tracker-local.md)
 - Custom: [references/issue-tracker-custom.md](references/issue-tracker-custom.md)
 
@@ -71,6 +72,13 @@ Record actual repository-specific values, not unresolved placeholders. Avoid
 copying the detailed document-role rules into multiple files; the configuration
 should map roles to paths and defer maintenance behavior to
 `$project-documentation`.
+
+Re-read the written maps and agent-instruction section. Confirm that every path
+is discoverable from the agent instructions, no unresolved repository-specific
+placeholder remains, the chosen tracker has explicit ready/done states, and
+rerunning setup would update the same blocks rather than create duplicates.
+Documented runtime variables such as `<feature>` and `<ticket>` may remain when
+the downstream workflow supplies them for each piece of work.
 
 ## Finish
 

@@ -14,8 +14,9 @@ work, not another source of project truth.
 
 Find the project-documentation configuration named by the repository's agent
 instructions. It must map the project's authorities and development-record path.
-If either is missing, explain that `$setup-senler-skills` should be run; do not
-silently impose default paths.
+If either is missing, tell the user to explicitly run `$setup-senler-skills`;
+do not run that explicit-only workflow on their behalf or silently impose
+default paths.
 
 Read only the configuration and candidate authorities needed for the current
 fact. Follow established casing, language, terminology, and style. Read

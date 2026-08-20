@@ -30,14 +30,17 @@ class GrillingWorkflowContractTests(unittest.TestCase):
             "allow_implicit_invocation: false", read_metadata("grill-with-docs")
         )
 
-    def test_grilling_preserves_matt_core_behavior(self) -> None:
+    def test_grilling_uses_dependency_safe_frontier_rounds(self) -> None:
         grilling = read_skill("grilling")
 
-        self.assertIn("Interview me relentlessly", grilling)
-        self.assertIn("questions one at a time", grilling)
+        self.assertIn("Interview the user relentlessly", grilling)
+        self.assertIn("design tree", grilling)
+        self.assertIn("frontier rounds", grilling)
+        self.assertIn("prerequisites", grilling)
         self.assertIn("If a fact can be found", grilling)
-        self.assertIn("The decisions, though, are mine", grilling)
-        self.assertIn("Do not act on it until I confirm", grilling)
+        self.assertIn("The decisions, though, are the user's", grilling)
+        self.assertIn("Do not act on the design", grilling)
+        self.assertNotIn("sub-agent", grilling)
 
     def test_grill_with_docs_is_only_the_approved_composition(self) -> None:
         workflow = read_skill("grill-with-docs")

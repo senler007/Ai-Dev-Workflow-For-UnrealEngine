@@ -12,10 +12,10 @@
 
 ## 安装和使用
 
-把下面这一句话发给 Codex，一次安装全部九个 Skill：
+把下面这一句话发给 Codex，一次安装全部十个 Skill：
 
 ```text
-Use $skill-installer to install all nine Skills from https://github.com/senler007/skills.
+Use $skill-installer to install all ten Skills from https://github.com/senler007/skills.
 ```
 
 安装完成后开始一个新的 Codex 对话，打开你的项目，然后运行：
@@ -30,7 +30,7 @@ Use $setup-senler-skills to configure this project so every Skill knows where it
 
 只运行这次变更真正需要的阶段。调用哪个 Skill、什么时候调用，都由你决定：
 
-1. **把设计聊清楚**：设计还不清楚时运行 `$grill-with-docs`。它每次只问一个决策，等你确认最终汇总后，再把整份结论一次性写进项目文档。
+1. **把设计聊清楚**：设计还不清楚时运行 `$grill-with-docs`。它按依赖关系分轮询问当前已经可以决定的问题，等你确认最终汇总后，再把整份结论一次性写进项目文档。
    - **例子：**“帮我确定完整的回合生命周期。”“和我一起梳理道具卡系统的设计。”
 2. **为这次修改留下记录**：当一个功能或修改已经足够明确时，运行 `$to-spec`。
 3. **拆成真正能做的工作（可选）**：当 Spec 需要独立切片、依赖排序或分批交付时运行 `$to-tickets`，再由你批准拆分结果。
@@ -58,11 +58,11 @@ Use $setup-senler-skills to configure this project so every Skill knows where it
 
 | Skill | 用途 |
 | --- | --- |
-| `setup-senler-skills` | 告诉其他 Skill 项目的 Tracker 和文档在哪里，不会顺手创建一堆空文件。 |
-| `grill-with-docs` | 每次只问一个设计问题，等你最终确认后，再把汇总结论一次性写进正确的项目文档。 |
+| `setup-senler-skills` | 配置 GitHub、GitLab、本地或自定义 Tracker 以及项目文档路径，不会顺手创建一堆空文件。 |
+| `grill-with-docs` | 按依赖关系分轮梳理设计，等你最终确认后，再把汇总结论一次性写进正确的项目文档。 |
 | `to-spec` | 只为这次修改留下一份简短记录，不把完整项目设计复制进去。 |
 | `to-tickets` | 按需把较大的修改拆成完整纵向切片，等你确认粒度和依赖以后才发布。 |
-| `implement` | 直接实现 Spec 或 Ticket 范围，运行测试和审查，同步长期文档，然后提交。 |
+| `implement` | 直接实现 Spec 或 Ticket 范围，测试并审查完整任务增量，同步长期文档，确认没有混入用户既有改动后再提交。 |
 
 ### 支持 Skill
 
@@ -70,10 +70,11 @@ Use $setup-senler-skills to configure this project so every Skill knows where it
 
 | Skill | 用途 |
 | --- | --- |
-| `grilling` | 不让 AI 一次扔给你十个问题：一次一个决策、一个建议、一个回答。 |
+| `grilling` | 把设计映射成决策树，每轮只询问当前依赖已满足的决策前沿。 |
 | `project-documentation` | 把每个模块的设计、代码结构和维护地图保存在一份人能读懂的文档里，并把已完成的项目修改写入当天开发记录。 |
+| `fix-bug` | 以证据修复缺陷：复现现象、找到第一个错误状态、修复最早确认的源头并留下回归证据；当你要求修复 Bug 时可以隐式启用。 |
 | `tdd` | 通过稳定的公开边界测试行为，而不是测试内部实现细节。 |
-| `code-review` | 分开审查 Standards、Spec 和 Documentation，而且不会修改你的文件。 |
+| `code-review` | 分开审查已提交、已暂存、未暂存和未跟踪变更的 Standards、Spec 与 Documentation，且不修改文件。 |
 
 ## 来源
 

@@ -7,9 +7,9 @@ This skill takes the current conversation context and codebase understanding and
 produces a Spec. Do NOT interview the user — just synthesize what is already
 known.
 
-The issue tracker and project-documentation layout should have been provided by
-`$setup-senler-skills`. Run it first if `issue-tracker.md` or `project-docs.md`
-is missing.
+Locate the issue-tracker and project-documentation maps through the repository's
+agent instructions. If either is missing, tell the user to explicitly run
+`$setup-senler-skills`; do not run that explicit-only workflow on their behalf.
 
 ## Process
 
@@ -23,9 +23,11 @@ is missing.
 
    Check with the user that these seams match their expectations.
 
-3. Write the Spec using the template below, then publish it to the configured
-   project tracker. Apply the configured ready label or state; no additional
-   triage is needed.
+3. Write the Spec using the template below, then publish it exactly where the
+   configured tracker map specifies. For a local tracker, create the configured
+   Spec file and Status field. For an external tracker, publish directly without
+   a temporary repository copy. Apply the configured ready label or state; no
+   additional triage is needed.
 
 Invoking `$to-spec` explicitly authorizes this one Spec publication and its
 configured ready label. Do not ask for a second confirmation before publishing.
@@ -56,5 +58,6 @@ required project-documentation synchronization.
 
 </spec-template>
 
-Report the published identifier or URL. Do not automatically start
+Read back the published Spec to verify its title, body, state, and identifier.
+Report its path, identifier, or URL. Do not automatically start
 `$to-tickets` or `$implement`; the user chooses the next workflow.

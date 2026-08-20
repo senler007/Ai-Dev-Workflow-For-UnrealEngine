@@ -1,0 +1,6 @@
+interface:
+  display_name: "Fix Bug"
+  short_description: "Trace the first divergence and fix the root cause"
+  default_prompt: "Use $fix-bug to reproduce this defect, trace the first bad state, make the smallest root-cause fix, and verify it."
+policy:
+  allow_implicit_invocation: true

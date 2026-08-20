@@ -57,6 +57,7 @@ class FoundationContractTests(unittest.TestCase):
 
         for filename in (
             "issue-tracker-github.md",
+            "issue-tracker-gitlab.md",
             "issue-tracker-local.md",
             "issue-tracker-custom.md",
             "project-docs.md",

@@ -3,15 +3,22 @@ name: grilling
 description: Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any grill trigger phrase.
 ---
 
-Interview me relentlessly about every aspect of this until we reach a shared
-understanding. Walk down each branch of the decision tree, resolving dependencies
-between decisions one-by-one. For each question, provide your recommended answer.
+Interview the user relentlessly until you reach a shared understanding. Map the
+topic as a **design tree**: every decision branches into the decisions that
+depend on it.
 
-Ask the questions one at a time, waiting for feedback on each question before
-continuing. Asking multiple questions at once is bewildering.
+Work in **frontier rounds**. The frontier is every unresolved decision whose
+prerequisites are already settled. Ask that whole frontier in one numbered round,
+give a recommended answer for each question, then wait for the user's answers.
+Never ask a question whose answer still depends on another open decision in the
+same round.
 
 If a fact can be found by exploring the environment (filesystem, tools, etc.),
-look it up rather than asking me. The decisions, though, are mine — put each one
-to me and wait for my answer.
+look it up directly instead of asking the user or delegating it. A missing fact
+keeps only its dependent branch off the frontier; independent questions can
+still proceed. The decisions, though, are the user's — put each one to them and
+wait for their answer.
 
-Do not act on it until I confirm we have reached a shared understanding.
+After every round, update the tree from the answers and recompute the frontier.
+The session ends only when the frontier is empty and the user confirms the
+consolidated understanding. Do not act on the design before that confirmation.

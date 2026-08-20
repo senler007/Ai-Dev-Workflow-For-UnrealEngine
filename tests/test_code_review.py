@@ -24,6 +24,18 @@ class ReviewContractTests(unittest.TestCase):
         for smell in ("Mysterious Name", "Feature Envy", "Shotgun Surgery", "Middle Man"):
             self.assertIn(smell, skill)
 
+    def test_review_covers_the_complete_worktree_snapshot(self) -> None:
+        skill = (SKILLS / "code-review" / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("git diff HEAD", skill)
+        self.assertIn("git ls-files --others --exclude-standard", skill)
+        self.assertIn("staged and unstaged", skill)
+        self.assertIn("same frozen change set", skill)
+        self.assertIn("read-only", skill)
+        self.assertIn("initial dirty-state patch", skill)
+        self.assertIn("Source work supplied by the calling workflow", skill)
+        self.assertIn("**blocking** or **advisory**", skill)
+
     def test_review_keeps_the_approved_senler_differences(self) -> None:
         skill = (SKILLS / "code-review" / "SKILL.md").read_text(encoding="utf-8")
         normalized = " ".join(skill.split())
@@ -32,7 +44,8 @@ class ReviewContractTests(unittest.TestCase):
             self.assertIn(axis, skill)
         self.assertIn("current conversation", skill)
         self.assertIn("Do not create sub-agents", normalized)
-        self.assertIn("project-docs.md", skill)
+        self.assertIn("project-documentation maps", skill)
+        self.assertIn("Do not assume they live under `docs/agents/`", skill)
         self.assertIn("module guides", skill)
 
 

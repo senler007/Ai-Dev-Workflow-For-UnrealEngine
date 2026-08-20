@@ -16,10 +16,10 @@ This workflow is largely inspired by AIHero, with three key changes:
 
 ## Set and Use
 
-Paste this into Codex to install all nine Skills:
+Paste this into Codex to install all ten Skills:
 
 ```text
-Use $skill-installer to install all nine Skills from https://github.com/senler007/skills.
+Use $skill-installer to install all ten Skills from https://github.com/senler007/skills.
 ```
 
 After installation, start a new Codex turn, open your project, and run:
@@ -34,7 +34,7 @@ This initializes the Skills for that project and only needs to run once.
 
 Use only the stages your change needs. You decide which Skill runs and when:
 
-1. **Talk the design through** - run `$grill-with-docs` when the design is still unclear. It asks one decision at a time, then writes the consolidated decisions to project docs only after you confirm the final summary.
+1. **Talk the design through** - run `$grill-with-docs` when the design is still unclear. It asks dependency-ready decisions in focused rounds, then writes the consolidated decisions to project docs only after you confirm the final summary.
    - **Examples:** "Help me define the full turn lifecycle." "Walk me through the item-card system and clarify its design."
 2. **Create a change record** - run `$to-spec` whenever a feature or change is clear enough to build.
 3. **Break it into real work (optional)** - run `$to-tickets` when the Spec needs independent slices, dependency ordering, or staged delivery, then approve the breakdown.
@@ -63,11 +63,11 @@ These run only when you ask for them.
 
 | Skill | What it does |
 | --- | --- |
-| `setup-senler-skills` | Tells the Skills where your tracker and project docs live without creating empty junk. |
-| `grill-with-docs` | Asks one design question at a time, gets final confirmation, then writes the consolidated decisions to the right project document in one pass. |
+| `setup-senler-skills` | Configures GitHub, GitLab, local, or custom tracking plus project-doc paths without creating empty junk. |
+| `grill-with-docs` | Runs dependency-safe design rounds, gets final confirmation, then writes the consolidated decisions to the right project document in one pass. |
 | `to-spec` | Creates a small record of one change instead of copying the whole project design. |
 | `to-tickets` | Optionally splits larger work into complete vertical slices and waits for you to approve the plan. |
-| `implement` | Implements a Spec or Ticket scope directly, runs tests and review, updates durable docs, and commits. |
+| `implement` | Implements a Spec or Ticket scope, tests and reviews the complete task delta, updates durable docs, and commits only after verifying that user changes are not mixed in. |
 
 ### Supporting Skills
 
@@ -75,10 +75,11 @@ These provide discipline when the task needs it.
 
 | Skill | What it does |
 | --- | --- |
-| `grilling` | Stops AI from asking ten questions at once: one decision, one recommendation, one answer. |
+| `grilling` | Maps a design tree and asks only the dependency-ready decision frontier in each focused round. |
 | `project-documentation` | Keeps each module's design, code structure, and maintenance map in one human-readable guide, then records completed project changes in the daily development record. |
+| `fix-bug` | Repairs defects from evidence: reproduces the symptom, traces the first wrong state, fixes the earliest confirmed source, and leaves regression evidence. It can activate implicitly when you ask for a bug to be fixed. |
 | `tdd` | Tests behavior through stable public seams instead of testing implementation details. |
-| `code-review` | Reviews Standards, Spec, and Documentation separately without changing your files. |
+| `code-review` | Reviews committed, staged, unstaged, and untracked changes across Standards, Spec, and Documentation without changing files. |
 
 ## Credit
 

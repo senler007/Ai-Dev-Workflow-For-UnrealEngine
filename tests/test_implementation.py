@@ -33,6 +33,12 @@ class ImplementationPackageContractTests(unittest.TestCase):
         self.assertTrue((root / "tests.md").is_file())
         self.assertFalse((root / "references" / "mocking.md").exists())
 
+    def test_tdd_requires_user_confirmed_seams(self) -> None:
+        instructions = (SKILLS / "tdd" / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("Test only at pre-agreed seams", instructions)
+        self.assertIn("No test is written at an unconfirmed seam", instructions)
+
     def test_implement_preserves_the_direct_matt_flow(self) -> None:
         instructions = " ".join(
             (SKILLS / "implement" / "SKILL.md")
@@ -44,13 +50,24 @@ class ImplementationPackageContractTests(unittest.TestCase):
         for requirement in (
             "implement the work described by the user in the spec or tickets",
             "a spec is sufficient input",
-            "use `$tdd` where possible, at pre-agreed seams",
+            "use `$tdd` where possible at seams already agreed",
             "run typechecking regularly",
             "full test suite once at the end",
-            "use `$code-review` to review the work",
-            "commit the work to the current branch",
+            "use `$code-review`",
+            "verify the staged diff before committing",
         ):
             self.assertIn(requirement, instructions)
+
+        for review_contract in (
+            "capture the starting `head` as the review baseline",
+            "staged, unstaged, and untracked changes",
+            "resolve review findings that are within scope",
+            "no in-scope blocking finding remains",
+            "overlap in the same hunk",
+            "comparable content snapshot",
+            "blocking automatic commit",
+        ):
+            self.assertIn(review_contract, instructions)
 
         for forbidden_gate in (
             "small cohesive spec",

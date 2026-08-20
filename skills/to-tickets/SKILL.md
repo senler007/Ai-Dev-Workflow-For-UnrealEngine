@@ -7,7 +7,9 @@ description: Break a plan, Spec, or the current conversation into a set of trace
 
 Break a plan, Spec, or conversation into a set of **Tickets** — tracer-bullet vertical slices, each declaring the Tickets that **block** it.
 
-The issue tracker should have been provided to you — run `$setup-senler-skills` if not.
+Locate the issue-tracker map through the repository's agent instructions. If it
+is missing, tell the user to explicitly run `$setup-senler-skills`; do not run
+that explicit-only workflow on their behalf.
 
 ## Process
 
@@ -58,25 +60,36 @@ Iterate until the user approves the breakdown.
 
 Publish the approved Tickets. **How** depends on the tracker `$setup-senler-skills` configured — the Tickets are the same either way, only the shape of the blocking edges changes:
 
-- **Local files** → write one file per Ticket at the configured Ticket path, numbered from `01` in dependency order (blockers first). Each file's "Blocked by" lists the numbers/titles it depends on. Use the per-Ticket file template below — one Ticket per file, never a single combined file.
+- **Local files** → write one file per Ticket at the configured Ticket path,
+  numbered from `01` in dependency order (blockers first). Each file records the
+  configured ready state, its parent Spec when one exists, and the numbers/titles
+  that block it. Use the per-Ticket file template below — one Ticket per file,
+  never a single combined file.
 - **A real issue tracker** → publish one Issue per Ticket in dependency order (blockers first) so each Ticket's blocking edges can reference real identifiers. Use native blocking and sub-issue relationships where available; otherwise record the relationships in the Issue body. Apply the configured ready label or state.
 - **A custom tracker** → follow its configured identifiers, relationships, and state rules.
 
 Explicit invocation of `$to-tickets` authorizes publication of the approved Ticket set and its configured relationships or labels. After the user approves the breakdown, do not ask for another publication confirmation. When the configured tracker is external, publish directly and do not create temporary Ticket files inside the repository.
 
-Work the **frontier**: any Ticket whose blockers are all done. For a purely linear chain that means top to bottom.
+For later implementation, the eligible set is the **frontier**: any Ticket whose
+blockers are all done. For a purely linear chain that means top to bottom. This
+workflow defines that set; it does not start implementing it.
 
-Do NOT close or modify any parent Spec.
+Do not close, relabel, change the status of, or rewrite any parent Spec. The only
+allowed parent-side mutation is the native parent/sub-issue relationship already
+authorized by this publication workflow.
 
 <local-ticket-template>
 
 # <NN> — <Ticket title>
 
+**Parent:** the configured relative path to the parent Spec, or omit this field
+when the source was not a Spec.
+
 **What to build:** the end-to-end behavior this Ticket makes work, from the user's perspective — not a layer-by-layer implementation list.
 
 **Blocked by:** the numbers/titles of the Tickets that gate this one, or "None — can start immediately".
 
-**Status:** ready-for-agent
+**Status:** the configured ready state
 
 - [ ] Acceptance criterion 1
 - [ ] Acceptance criterion 2

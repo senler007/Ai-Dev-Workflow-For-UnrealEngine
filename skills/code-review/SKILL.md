@@ -1,38 +1,64 @@
 ---
 name: code-review
-description: Review the changes since a fixed point (commit, branch, tag, or merge-base) along three axes — Standards, Spec, and Documentation — and report them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
+description: Review committed or work-in-progress changes from a fixed baseline along three independent axes — Standards, Spec, and Documentation. Use for branches, PRs, uncommitted work, or requests to "review since X".
 ---
 
-Three-axis review of the diff between `HEAD` and a fixed point the user supplies:
+Three-axis review of one shared change set between a fixed baseline and the
+current repository snapshot:
 
 - **Standards** — does the code conform to this repo's documented coding standards?
 - **Spec** — does the code faithfully implement the originating issue / PRD / spec?
 - **Documentation** — do the changed behavior and code structure match their authoritative human-readable project documentation?
 
-Run all three axes in the current conversation. Do not create sub-agents.
+Run all three axes in the current conversation. Do not create sub-agents. This
+skill is read-only: report findings, but do not edit files.
 
-The issue tracker and project-documentation layout should have been provided to you — run `$setup-senler-skills` if `docs/agents/issue-tracker.md` or `docs/agents/project-docs.md` is missing.
+Locate the issue-tracker and project-documentation maps through the repository's
+agent instructions. Do not assume they live under `docs/agents/`. If the maps
+are missing, tell the user to explicitly run `$setup-senler-skills`; do not run
+that explicit-only workflow on their behalf.
 
 ## Process
 
-### 1. Pin the fixed point
+### 1. Pin the baseline
 
-Whatever the user said is the fixed point — a commit SHA, branch name, tag, `main`, `HEAD~5`, etc. If they didn't specify one, ask for it.
+Use the fixed point supplied by the user or calling workflow: a commit SHA,
+branch, tag, `main`, `HEAD~5`, or a captured starting `HEAD`. If neither supplied
+one, ask for it.
 
-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+Confirm it resolves with `git rev-parse <fixed-point>`. Also capture the commit
+list with `git log <fixed-point>..HEAD --oneline`.
 
-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here — not inside the review passes.
+### 2. Freeze the shared change set
 
-### 2. Identify the spec source
+Capture every in-scope state source before any review pass:
+
+- committed branch changes: `git diff <fixed-point>...HEAD`;
+- staged and unstaged tracked changes over `HEAD`: `git diff HEAD`;
+- untracked paths: `git ls-files --others --exclude-standard`, followed by the
+  relevant contents or binary metadata for each in-scope path.
+
+Treat the worktree diff as an overlay on the committed diff. When a calling
+workflow captured an initial dirty-state patch or untracked-file snapshot,
+compare against it and review only the task delta — do not exclude an entire path
+merely because it already had changes. If same-hunk overlap cannot be separated
+reliably, flag the overlap as blocking. Record the commands, commit list, and
+untracked-path list once; all three axes must review this same frozen change set.
+Only report "empty diff" when every source above is empty.
+
+### 3. Identify the spec source
 
 Look for the originating spec, in this order:
 
-1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in `docs/agents/issue-tracker.md`.
-2. A path the user passed as an argument.
+1. Source work supplied by the calling workflow or user: paths, URLs,
+   identifiers, or inline bodies. For multiple Tickets, include their parent Spec;
+   for `$fix-bug`, use the stated acceptance result as the behavior contract.
+2. Issue references in commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.)
+   — fetch via the configured issue-tracker map.
 3. A PRD/spec file under `docs/`, `specs/`, or `.scratch/` matching the branch name or feature.
 4. If nothing is found, ask the user where the spec is. If they say there isn't one, skip the **Spec** axis and report "no spec available".
 
-### 3. Identify the standards sources
+### 4. Identify the standards sources
 
 Anything in the repo that documents how code should be written, such as `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
 
@@ -56,13 +82,14 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 - **Middle Man** — a class or function that mostly just delegates onward. → cut it, call the real target direct.
 - **Refused Bequest** — a subclass or implementer that ignores or overrides most of what it inherits. → drop the inheritance, use composition.
 
-### 4. Identify the documentation sources
+### 5. Identify the documentation sources
 
-Read `docs/agents/project-docs.md`, `$project-documentation`, and the module guides or other documentation authorities affected by the diff.
+Read the configured project-documentation map, `$project-documentation`, and the
+module guides or other documentation authorities affected by the change set.
 
-### 5. Run the three review passes
+### 6. Run the three review passes
 
-Use the same diff command and commit list for every pass.
+Use the same frozen change set and commit list for every pass.
 
 **Standards pass:**
 
@@ -82,11 +109,19 @@ If the spec is missing, skip the Spec pass and note this in the final report.
 - Report missing, incorrect, duplicated, or unapproved documentation changes.
 - Cite the applicable project-documentation rule and file for each finding.
 
-### 6. Aggregate
+Label every finding **blocking** or **advisory** within its own axis. Documented
+standards breaches, Spec mismatches or omissions, unsafe change-set overlap, and
+missing synchronization with an authoritative project document are blocking by
+default. Fowler smell heuristics are advisory by default. Use evidence to justify
+exceptions; classification does not merge or rank findings across axes.
+
+### 7. Aggregate
 
 Present the three reports under `## Standards`, `## Spec`, and `## Documentation` headings, verbatim or lightly cleaned. Do **not** merge or rerank findings — the three axes are deliberately separate (see _Why three axes_).
 
-End with a one-line summary: total findings per axis, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes — that's the reranking the separation exists to prevent.
+End with a one-line summary: blocking and advisory totals per axis, and the worst
+issue _within each axis_ (if any). Don't pick a single winner across axes — that's
+the reranking the separation exists to prevent.
 
 ## Why three axes
 
