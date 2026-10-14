@@ -1,6 +1,0 @@
-interface:
-  display_name: "Grilling"
-  short_description: "Clarify requirements before planning a feature"
-  default_prompt: "Use $grilling to clarify this feature in decision dependency order, then pass the settled requirements to ask-plan-build."
-policy:
-  allow_implicit_invocation: true

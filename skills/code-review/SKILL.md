@@ -1,111 +1,22 @@
 ---
 name: code-review
-description: Review the changes since a fixed point (commit, branch, tag, or merge-base) along three axes — Standards, Spec, and Documentation — and report them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
+description: 审查当前项目的分支、PR、工作区或指定提交后的改动；项目逻辑变更交付前也使用。仅审查，不自动修改或提交。
 ---
 
-Three-axis review of one fixed change set, including uncommitted work when that is the requested scope:
+# 检查本次改动
 
-- **Standards** — does the code conform to this repo's documented coding standards?
-- **Spec** — does the code faithfully implement the originating issue / PRD / spec?
-- **Documentation** — do the changed behavior and code structure match their authoritative human-readable project documentation?
+先确定同一份审查范围：工作区默认对照 HEAD，分支对照目标分支的共同祖先；同时检查范围内已提交、已暂存、未暂存及未跟踪内容。有任务开始快照时据此区分本次改动，不能因文件原本有修改就整份排除。确实无法分离时说明重叠。
 
-Run all three axes in the current conversation. Do not create sub-agents.
+项目路径均相对于当前工作项目根目录；文档采用 [project-documentation](../project-documentation/SKILL.md) 规定的固定架构，不搜索替代目录。按需读取 `AGENTS.md`、相关需求和 `Docs/Modules/` 模块指南；Unreal 任务再使用 [unreal-project](../unreal-project/SKILL.md)。检查：
 
-Read applicable AGENTS.md instructions and their documentation/tracker map. Use existing `docs/agents/issue-tracker.md` and `docs/agents/project-docs.md` when configured; their absence does not require setup or block review. The current user request and accepted plan can be the specification.
+| 方面 | 重点 |
+| --- | --- |
+| 规范与架构 | 复用完整流程，状态／规则／表现归属正确，公共入口窄，符合当前项目技术约束；Unreal 任务另检查 C++ 与 Blueprint 边界及类型化资源引用。 |
+| 需求 | 已确认效果有无遗漏、错误或额外扩展；清理、中断、离场及必要联网行为是否完整。 |
+| 文档与验证 | 稳定行为和维护入口是否同步；验证是否覆盖真实操作与原功能，未执行的检查是否明确。 |
 
-## Process
+以当前已确认需求及关联 Spec/Ticket 为需求依据，不依赖额外的 Tracker 配置文件；没有行为约定或无法检查二进制资产时说明覆盖缺口，不猜测通过。Unreal 资产检查仍遵守项目的 MCP 与协调边界，不为只读审查擅自加载或保存资产。
 
-### 1. Pin the fixed change set
+每个实际问题给出位置、违反的约束和具体后果；区分缺陷与可选偏好。三方面都要有结论，没有发现就写未发现。只读审查不代表已运行测试，也不能保证不存在问题。
 
-Honor the requested branch, PR, commit, or worktree scope. For delivery review,
-review the current task's actual edits without asking the user to provide a ref.
-
-- For committed branch work, resolve the supplied/default target branch, then
-  capture `git diff <fixed-point>...HEAD` and
-  `git log <fixed-point>..HEAD --oneline`.
-- For worktree changes, capture `git diff HEAD` for staged and unstaged tracked
-  changes, plus `git ls-files --others --exclude-standard` and the relevant
-  untracked files. With no HEAD yet, inspect the initial index and new files.
-- For a since-commit request, resolve that commit and compare its tree to the
-  requested endpoint; do not silently change this into a merge-base comparison.
-
-Record the resolved baseline, selected paths, and current file hashes or a
-snapshot. Keep the same contents for every pass. Separate pre-existing unrelated
-edits from this task. An invalid ref needs correction; an empty committed diff
-must not hide worktree changes. Report no changes only after checking the full
-requested scope. If files change during review, refresh affected findings.
-
-### 2. Identify the spec source
-
-Use the user's current request, accepted clarification/plan, and any supplied
-Spec/Ticket or PR as the scope authority. Follow linked issues through the
-project's actual tracker configuration; inspect matching local specifications
-when useful. Ask only about material missing requirements. A separate issue or
-specification file is not required. If no requirement evidence exists, report
-that limitation on the Spec axis and continue the other passes.
-
-### 3. Identify the standards sources
-
-Anything in the repo that documents how code should be written, such as `CODING_STANDARDS.md` or `CONTRIBUTING.md`.
-
-On top of whatever the repo documents, the Standards axis always carries the **smell baseline** below — a fixed set of Fowler code smells (_Refactoring_, ch.3) that applies even when a repo documents nothing. Two rules bind it:
-
-- **The repo overrides.** A documented repo standard always wins; where it endorses something the baseline would flag, suppress the smell.
-- **Always a judgement call.** Each smell is a labelled heuristic ("possible Feature Envy"), never a hard violation — and, like any standard here, skip anything tooling already enforces.
-
-Each smell reads *what it is* → *how to fix*; match it against the diff:
-
-- **Mysterious Name** — a function, variable, or type whose name doesn't reveal what it does or holds. → rename it; if no honest name comes, the design's murky.
-- **Duplicated Code** — the same logic shape appears in more than one hunk or file in the change. → extract the shared shape, call it from both.
-- **Feature Envy** — a method that reaches into another object's data more than its own. → move the method onto the data it envies.
-- **Data Clumps** — the same few fields or params keep travelling together (a type wanting to be born). → bundle them into one type, pass that.
-- **Primitive Obsession** — a primitive or string standing in for a domain concept that deserves its own type. → give the concept its own small type.
-- **Repeated Switches** — the same `switch`/`if`-cascade on the same type recurs across the change. → replace with polymorphism, or one map both sites share.
-- **Shotgun Surgery** — one logical change forces scattered edits across many files in the diff. → gather what changes together into one module.
-- **Divergent Change** — one file or module is edited for several unrelated reasons. → split so each module changes for one reason.
-- **Speculative Generality** — abstraction, parameters, or hooks added for needs the spec doesn't have. → delete it; inline back until a real need shows.
-- **Message Chains** — long `a.b().c().d()` navigation the caller shouldn't depend on. → hide the walk behind one method on the first object.
-- **Middle Man** — a class or function that mostly just delegates onward. → cut it, call the real target direct.
-- **Refused Bequest** — a subclass or implementer that ignores or overrides most of what it inherits. → drop the inheritance, use composition.
-
-### 4. Identify the documentation sources
-
-Read the configured map (AGENTS.md or an existing `docs/agents/project-docs.md`), `$project-documentation`, and the module guides or other authorities affected by the diff.
-
-### 5. Run the three review passes
-
-Use the same captured change set and requirement evidence for every pass.
-
-**Standards pass:**
-
-- Report — per file/hunk where relevant — (a) every place the diff violates a documented standard: cite the standard (file + the rule); and (b) any baseline smell you spot: name it and quote the hunk.
-- Distinguish hard violations from judgement calls — documented-standard breaches can be hard, but baseline smells are always judgement calls, and a documented repo standard overrides the baseline.
-- Skip anything tooling enforces.
-
-**Spec pass:**
-
-- Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong.
-- Cite the requirement or accepted user decision for each finding.
-
-If the spec is missing, skip the Spec pass and note this in the final report.
-
-**Documentation pass:**
-
-- Report missing, incorrect, duplicated, or unapproved documentation changes.
-- Cite the applicable project-documentation rule and file for each finding.
-
-### 6. Aggregate
-
-Present the three reports under `## Standards`, `## Spec`, and `## Documentation` headings, verbatim or lightly cleaned. Do **not** merge or rerank findings — the three axes are deliberately separate (see _Why three axes_).
-
-End with a one-line summary: total findings per axis, and the worst issue _within each axis_ (if any). Don't pick a single winner across axes — that's the reranking the separation exists to prevent.
-
-## Why three axes
-
-A change can pass one axis and fail another:
-
-- Code that follows every standard but implements the wrong thing → **Standards pass, Spec fail.**
-- Code that does exactly what the issue asked but breaks the project's conventions → **Spec pass, Standards fail.**
-- Code and behavior can both be correct while the human-readable project documentation is stale → **Standards and Spec pass, Documentation fail.**
-
-Reporting them separately stops one axis from masking another.
+修复由实施流程在已授权范围内进行；合并、提交和推送不属于审查授权。

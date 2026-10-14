@@ -1,6 +1,6 @@
 interface:
-  display_name: "Setup Senler Skills"
-  short_description: "Configure global workflows and project module docs"
-  default_prompt: "Use $setup-senler-skills to initialize this project with the globally installed workflow, reusing existing documents and rules."
+  display_name: "项目一键初始化"
+  short_description: "按固定文档架构初始化项目，接入本地技能与澄清、方案和实施流程"
+  default_prompt: "使用 $setup-senler-skills 初始化当前项目，严格采用这套固定文档架构和已安装的本地 Skill。"
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

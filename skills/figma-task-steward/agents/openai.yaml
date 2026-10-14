@@ -1,6 +1,0 @@
-interface:
-  display_name: "Figma 任务管家"
-  short_description: "逐卡澄清与派发任务，并行静态调查，串行修改与编辑器操作，保留跨天成果"
-  default_prompt: "使用 $figma-task-steward 管理当前项目的 Figma 任务，按实际授权派发、交接和回报；静态调查并行，修改与编辑器操作串行。"
-policy:
-  allow_implicit_invocation: true

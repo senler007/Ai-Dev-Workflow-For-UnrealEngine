@@ -1,6 +1,0 @@
-interface:
-  display_name: "To Spec"
-  short_description: "Publish a lightweight change spec"
-  default_prompt: "Use $to-spec to synthesize this discussion into a tracker-ready change Spec."
-policy:
-  allow_implicit_invocation: false

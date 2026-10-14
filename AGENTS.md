@@ -1,41 +1,21 @@
 # Repository guidance
 
-- Keep skill source in English and generated project documents in the configured project language.
-  Exception: preserve the author's Chinese source for `figma-task-steward`.
-- Keep `SKILL.md` frontmatter limited to `name` and `description`.
-- Preserve Matt Pocock's upstream package layout for derived Skills. Use
-  `references/` only for Senler-specific material; do not add per-skill README files.
-- Validate every changed skill with the bundled skill validator and run repository tests.
+- Preserve the copied local skills' source language and rules; do not translate or
+  rewrite them just to generalize project identifiers.
+- Limit `SKILL.md` frontmatter to `name` and `description`.
+- Keep only instructions that add Senler-specific decisions or prevent a concrete
+  workflow failure. Do not duplicate general coding advice or require upstream
+  structure; this is an independently maintained derivative.
+- Validate changed skills with the bundled skill validator and run
+  `python -m unittest discover -s tests -v`.
 - Preserve the MIT attribution to Matt Pocock and senler007.
-- Treat this repository as an independent derivative; do not assume upstream synchronization.
 
-## Upstream behavior
-
-The complete package is installed globally. Project setup reuses existing
-project documents and records routing in the project's own AGENTS.md.
-New features use `grilling` -> `ask-plan-build` -> approved implementation;
-clear small edits and approved plans do not repeat clarification or approval.
-Unreal conventions, review, and documentation apply when relevant. Figma
-coordination requires the current user's actual activation and permissions.
-Keep all existing explicit Spec/Ticket workflows available; they are not
-mandatory stages of the default feature workflow. Never export one project's
-paths, account links, runtime ledger, schedule, or authorization as defaults.
-The upstream-baseline rules below apply to the retained derived workflows.
-
-- Treat Matt Pocock's current Skill as the behavioral baseline for every derived
-  workflow Skill.
-- Do not add confirmation gates, stop conditions, orchestration, scope tests, or
-  publication prompts unless the user explicitly approves that difference.
-- The approved Senler differences are: Senler naming and Codex metadata;
-  human-readable module guides managed by `$project-documentation`; no standalone
-  Architecture document; the lightweight four-part Spec; human-selected workflow
-  stages; no sub-agents; `$grill-with-docs` defers all documentation writes until
-  the user confirms the final consolidated decisions; and explicit workflow
-  invocation as authorization for the publication that workflow describes.
-
-## Senler skills
-
-Before using a Senler workflow Skill, read and follow
-`docs/agents/issue-tracker.md` and `docs/agents/project-docs.md`. Use
-`$project-documentation` for durable ownership and the configured development
-record.
+The current local skill packages are the source of truth. The initializer is
+a new local implementation of the fixed document structure, not a restored
+remote workflow. Do not restore
+removed packages, document maps, tests, or daily development records from remote
+history. Maintain the package catalog and usage in README.md / README.zh-CN.md;
+skill behavior belongs in skills/<name>/SKILL.md and its linked resources.
+Consumer projects must use the fixed document structure defined by
+skills/project-documentation/SKILL.md; do not add alternative-layout discovery.
+This package repository is not a consumer-project initialization target.

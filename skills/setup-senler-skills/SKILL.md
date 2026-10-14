@@ -1,106 +1,54 @@
 ---
 name: setup-senler-skills
-description: Initialize or adapt a project to the globally installed Senler workflow, including project docs, grilling-to-plan routing, Unreal conventions, and Figma task coordination. Use when the user asks to set up this workflow in a new or existing project.
+description: 按 Senler 固定文档架构初始化新项目，或补齐当前项目的接入配置。用户要求一键初始化、建立项目文档和开发流程时使用；使用已安装的本地 Skill，不从远程恢复旧版。
 ---
 
-# Set up the whole workflow
+# 一次初始化项目
 
-This explicit setup request authorizes the project documentation and instruction
-changes needed to adopt the workflow. Inspect first, preserve existing work,
-then complete setup. Do not ask for approval again for the requested setup.
-Ask only for missing product facts or an actual conflicting convention. This
-skill does not implement a product feature, publish tracker work, activate
-unrequested automations, or enroll unrelated chats.
+使用当前安装的 [project-documentation](../project-documentation/SKILL.md) 作为文档架构权威，使用本包的 [初始化内容](references/project-initialization.md) 组织正文。初始化只建立项目文档和工作规则，不创建游戏工程、产品功能或自动任务，不提交或推送。
 
-## Discover the current project
+用户要求初始化已经授权本次所需的文档创建和规则配置，直接完成，不为选目录、建文件或写规则再次审批。只询问无法从当前资料得到的项目事实，或会丢失已有内容的真实冲突。不运行完整的功能 grilling / ask-plan-build 流程来审批初始化本身。
 
-Locate the real project root, applicable agent instructions, existing documents,
-Git remote, language, engine/toolchain, and available tool connections. Reuse
-existing names, directory casing, authorities, and user decisions. A blank
-project may need its purpose and intended audience from the user; ask together
-for the few unknowns that affect the initial documents. Do not infer a game's
-world or features from its folder name.
+## 确定项目与输入
 
-All skills remain in the user's global installation. Resolve the installed
-skill paths instead of copying skills into the project or hardcoding a machine
-path. If a project already has same-name skills, inspect them and explicitly
-select the intended source in its rules; preserve local customizations. Do not
-silently delete them or assume that duplicate names are merged.
+1. 以用户在当前会话打开或明确指定的工作目录为项目根目录，不以 Skill 安装目录、技能源码仓库或其他项目为根目录。目标目录存在实质歧义时先确认目标，不能初始化技能仓库自身。
+2. 读取目标根目录适用的 `AGENTS.md` 和固定位置的现有文档；检查当前工程标识、内容目录及已配置工具，取得真实项目事实。只核查本次初始化需要的信息，不做完整代码审计、不加载编辑器资产。
+3. 项目名称、用途与核心体验是概览的必要输入。用户已提供时直接使用；能从当前项目明确确认时自行获取。空目录无法判断用途时，集中询问这些缺项一次。不要按文件夹名称编造游戏类型、玩法或世界观，也不追问无关的未来功能。
+4. 确认已安装的 `grilling`、`ask-plan-build`、`code-review`、`project-documentation`、`unreal-project` 可用。使用当前本地版本，不拉取 GitHub、不安装或恢复旧技能。缺少哪个就准确指出哪个，仍完成不受影响的文档工作，不宣称整套已经就绪。
 
-## Prepare project documents
+## 固定输出
 
-Use [the document templates](references/project-docs.md). Existing owners take
-precedence. Create only documents for which confirmed content exists:
+所有输出均相对于目标项目根目录，文件名和大小写固定：
 
-- AGENTS.md: the workflow entry, document map, conventions, tool boundaries.
-- README.md: actual project setup/use and resource or repository conventions.
-- Docs/ProjectOverview.md: confirmed project purpose, experience, navigation,
-  and supplied reference links, including Figma when available.
-- CONTEXT.md: actual terms when a glossary is useful.
-- Docs/Worldbuilding.md: supplied world and character facts for narrative projects.
-- Docs/Modules/: the module-guide convention; create a guide only for a real
-  established module, with explicit human confirmation of a new guide boundary.
+- `AGENTS.md`
+- `README.md`
+- `CONTEXT.md`
+- `Docs/ProjectOverview.md`
 
-Merge changed sections rather than replacing existing files. Do not create empty
-files/directories, invented capabilities, or a standalone Architecture document.
-Do not resurrect deliberately deleted documents or add a daily record unless
-this project already requires one or the user requests it.
+按 `project-documentation` 的职责填入已确认内容。其余按实际需求处理：有已确认的世界观内容才创建 `Docs/Worldbuilding.md`；有实际模块且新指南已获用户要求或批准才创建 `Docs/Modules/<功能名>.md`。不创建空模块目录、空章节、TODO 占位或猜测内容。
 
-Keep the role map directly in AGENTS.md unless a separate map already exists.
-Reuse an established tracker. Without one, current requests and approvals are
-the scope authority; no issue service or local tracker needs to be created.
-For explicitly requested tracked work without a destination, ask which tracker
-and repository or local directory to use, then record the answer in the existing
-map before returning to that workflow. Do not skip this choice by merely leaving
-the tracker unconfigured. The existing references support
-[GitHub](references/issue-tracker-github.md),
-[local files](references/issue-tracker-local.md), and
-[another service](references/issue-tracker-custom.md).
+不提供替代目录选项，不搜索其他布局作为兼容入口。已有项目也按这套固定位置接入；不得为了满足结构而擅自删除其他资料。遇到固定位置已经存在的内容，保留事实和人工说明，只合并缺失的规则、导航及已确认更新。
 
-## Connect all installed skills
+## 写入工作流程
 
-Merge these routing rules into the project's agent instructions:
+从初始化内容中的规则生成项目自己的 `AGENTS.md`：
 
-1. New features and behavior changes start with `$grilling`. Inspect existing
-   implementation first. Reuse existing answers; if clear, summarize without
-   manufacturing questions.
-2. `$ask-plan-build` consumes that summary, proposes concrete changes and
-   validation, then implements the approved scope. Do not repeat Ask or approval.
-   Small explicit edits and already approved implementation proceed directly.
-3. Apply `$unreal-project` to Unreal work. Follow real engine versions, content
-   ownership, and connected editor tools. Non-Unreal tasks do not activate it.
-4. Review logic changes with `$code-review`, fix authorized findings, and verify
-   affected behavior. Update stable facts with `$project-documentation`.
-5. Use `$figma-task-steward` when the user enables Figma task management. Keep
-   static reading and clarification parallel; coordinate shared writes, builds,
-   tests, and editor actions serially. Do not enroll ordinary independent chats.
-6. Preserve the installed `$grill-with-docs`, `$to-spec`, `$to-tickets`,
-   `$implement`, and `$tdd` workflows for explicit use; publishing and committing
-   remain governed by the selected workflow and the user's request.
+- 新功能或行为变更先使用 `grilling`，再由 `ask-plan-build` 承接结论、形成方案，确认后实施；明确的小改动和已批准方案直接执行。
+- 已有答案和批准不重复询问；先调查已有功能并复用完整公共流程。
+- Unreal 任务使用 `unreal-project`；非 UE 项目不写入 UE 专有约束和命令。
+- 逻辑改动完成后使用 `code-review`；稳定行为和维护入口变化时使用 `project-documentation`。
+- 固定文档路径与职责；不生成每日记录或独立架构文档，不恢复已删除的旧配置。
 
-## Resolve environment-dependent capabilities
+Skill 默认引用已安装的全局版本，不复制进新项目，不把某台电脑的安装绝对路径写进项目规则。若固定项目位置已有同名本地 Skill，保留它们，并核对既有来源声明；不声称已经切换为全局版、不删除用户定制，也不把两份同名内容混合执行。
 
-Installation of the whole package is complete even when an external connector
-has not been configured. Check only the capabilities the project will use and
-report specific missing connections. Do not claim connected or enabled without
-tool evidence, and do not stop unrelated setup for a missing connector.
+项目专用引擎版本、已验证的工具与命令写入 `AGENTS.md`；资源目录、命名和资产版本规则写入 `README.md`。没有实际工具或命令就不写虚构命令。Figma 参考链接仅在用户提供且与本项目相关时进入概览；初始化不导入其他项目的授权、账户链接、账本、会话、日程或自动启用管家。
 
-For Unreal, record the actual engine and approved editor access. Shared defaults
-live in `$unreal-project`; project-specific commands and asset roots stay here.
-Do not import another project's custom close command, asset paths, or grants.
+## 重复运行与检查
 
-For Figma coordination, retain the real Figma link, task-page name, user timezone,
-and any requested handover schedule in the project overview or existing config.
-Confirm Figma access and Codex project/chat/message tools when activation is
-requested. Register actual authorization for participating chats and board
-updates. Do not copy another user's consent, ledger, thread IDs, or schedule.
-An unavailable connection remains an explicit setup item; the rest proceeds.
+- 逐文件核对已有内容，按职责合并；相同规则不重复插入，人工内容不被整篇替换。无需变化的文件不写入。
+- 检查四份必需文件真实存在且有已确认内容；没有业务专有词汇时使用初始化内容中已经明确的工作流术语，不建立空术语表。
+- 概览导航只链接实际存在的文档。可选文档没有生成时不留下断链。项目名称、引擎版本、实际路径和引用保持一致。
+- 检查规则是否确实为 grilling → ask-plan-build，是否仍混入旧版固定轮数/题数、Tracker 配置文件或额外审批。
+- 报告实际创建、更新和保留的文件、所用 Skill 来源及具体未完成项。只完成文档初始化时，不声称引擎工程、Figma 连接或运行验证已完成。
 
-## Verify and finish
-
-Check generated paths and links, unresolved placeholders, duplicate authorities,
-and the actual discoverability of each installed skill. Re-running setup must
-reuse existing files and configuration rather than duplicate sections or reset
-decisions. Report the actual files changed, chosen skill sources, working
-capabilities, and concrete remaining setup. A subsequent new-feature request
-should start with grilling and reach a concrete plan without a second interview.
+完成后用户可直接提出新功能，按已写入的流程处理；本次初始化不要自行开始实现功能。

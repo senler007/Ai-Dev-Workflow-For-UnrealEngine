@@ -1,6 +1,0 @@
-interface:
-  display_name: "Ask Plan Build"
-  short_description: "Plan from clarified requirements, then build"
-  default_prompt: "Use $ask-plan-build to reuse the grilling conclusions, propose concrete changes, and implement the approved plan."
-policy:
-  allow_implicit_invocation: true

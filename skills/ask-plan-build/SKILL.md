@@ -1,64 +1,32 @@
 ---
 name: ask-plan-build
-description: Turn clarified feature requirements into a concrete implementation plan and carry it out after approval. Use after grilling or when the user requests a plan; reuse existing answers and approvals.
+description: 新功能或行为变更的方案与实施，承接 grilling 的需求澄清结论。用户明确要求先出方案时也使用；单纯调参、换资源和已批准方案的执行不重复走审批。
 ---
 
-## Ask
+# 先查、再提方案、后实现
 
-Use the outcome from `$grilling` as the Ask input. If a new feature or behavior
-change reaches this skill without clarification, run `$grilling` first. Reuse
-the conversation's settled effects, boundaries, acceptance criteria, and
-delegated choices; do not start a second interview. Already approved plans go
-directly to Build. Ask only about a newly discovered material gap, limited to
-the affected scope, and continue independent investigation while awaiting it.
+读取当前工作项目根目录的 `AGENTS.md`，以及对应 `Docs/Modules/` 模块指南；Unreal 任务使用 [unreal-project](../unreal-project/SKILL.md)。文档采用 [project-documentation](../project-documentation/SKILL.md) 规定的固定架构，不搜索替代位置。项目路径不相对于 Skill 安装目录；全局安装无需另放一套项目副本。只处理当前需求，未启用管家协调的任务不要求管家账本。
 
-## Propose
+## 承接澄清结论
 
-Synthesize the answers into your own recommended solution: intended behavior,
-key choices, implementation steps, and verification. State assumptions for
-delegated choices. Inspect the relevant implementation before proposing changes
-so the user can review a concrete change list, not just broad goals such as
-"refactor the weapon" or "adjust animations."
+- 新功能或行为变更先由 [grilling](../grilling/SKILL.md) 完成需求澄清；若直接进入本 Skill 且尚未完成澄清，先补齐这一阶段。已有澄清结论或已批准方案直接沿用，不重新开始。
+- 以已确定的效果、边界、验收和待定项为输入，核对已有功能及其完整流程。能从项目查明的事实自行调查，不让用户选择技术名词或猜架构。
+- 澄清完成后直接形成方案，不再单独进行一轮 Ask。新事实造成真实需求缺口时，只补充澄清受影响部分；已有聊天答案和批准继续有效。等待答案时继续不依赖答案的只读调查。
 
-Include the following detail where it applies:
+## 方案
 
-- **Files and assets:** List the specific paths to create, modify, move, rename,
-  or delete. For each, explain what changes, why it is needed, and the resulting
-  behavior. Related files may be grouped only if each path and its role remain
-  clear. Include configuration, references, and documentation affected by the
-  change, not only source code.
-- **Implementation:** Identify the relevant classes, functions, components, or
-  data fields and explain how their responsibilities or interactions change.
-  Describe meaningful before/after behavior and the order of dependent steps.
-- **Animations and other content:** Name the actual assets and paths involved,
-  including assets whose use changes without editing the asset itself. For
-  animation work, explain which motions change and how: reuse or replacement,
-  playback triggers, sequencing, blending, timing, notifies, slots, or bindings,
-  as relevant. Distinguish editing animation content from changing the code or
-  Blueprint that plays it. For example, a weapon refactor should identify the
-  affected equip, fire, or reload animations and their planned changes when
-  those motions are in scope.
-- **Verification:** Connect checks to the proposed behavior, including visible
-  or interactive outcomes for animation and UI changes. Identify any required
-  manual verification or unavailable validation.
+先检查实际实现，再用与改动规模相称的篇幅说明：
 
-Use enough detail for the user to understand what they are agreeing to without
-reading the implementation. Scale the explanation to the task; do not add
-unrelated changes or boilerplate categories. Do not invent asset names, paths,
-or parameter values. Mark unresolved details explicitly, explain how they will
-be determined, and distinguish confirmed targets from conditional changes.
+- **效果**：用户会看到或操作到什么，游戏任务描述玩家体验，与原行为有哪些差异。
+- **实现归属**：参照和复用入口；状态、规则、表现分别由谁负责。已有职责能容纳时直接给出技术判断。
+- **改动范围**：具体文件、资产及用途；区分换表现配置与改玩法逻辑，未知资产先标待核实，不编造路径。
+- **验证**：如何检查新效果与原功能；涉及联网时包含必要的主机／客户端视角。
 
-Present the plan and wait for the user's response before implementing.
+方案等待用户确认。涉及改变公共职责或网络权威归属的方案，交由项目负责人确认；已有明确批准不重复索取。普通新类或在既有职责内实现功能不自动视为架构改造。
 
-## Build
+## 实现与交付
 
-After approval, incorporate actionable corrections and implement the plan
-without another confirmation. If the user instead rejects the plan, asks a
-question or requests a rewritten proposal, or postpones implementation, address
-that request and remain at the proposal stage until they respond again.
-
-Complete the implementation and relevant validation. Use `$code-review` on the
-task's changes, correct findings within the approved scope, and verify affected
-behavior. Use `$project-documentation` when stable behavior or maintenance
-entry points changed. Report actual results and remaining checks. Do not commit,
-push, or publish unless requested or explicitly required by the invoked workflow.
+- 批准后按累计要求完成实现与必要验证，阶段切换不重新审批；用户要求调整方案时先处理调整。超出已批准范围的部分单独说明。
+- 逻辑改动完成后用 [code-review](../code-review/SKILL.md) 审查本次改动；属于已授权范围的问题直接修正，再验证受影响部分。
+- 稳定行为或维护入口确实变化时，用 [project-documentation](../project-documentation/SKILL.md) 同步现有文档。
+- 报告实际结果、验证与未完成事项，不把编译通过当成效果验收，不自动提交、推送或生成每日记录。

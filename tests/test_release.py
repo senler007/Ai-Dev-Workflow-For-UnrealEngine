@@ -2,85 +2,116 @@ from pathlib import Path
 import re
 import unittest
 
-try:
-    from tests.metadata_support import parse_simple_metadata
-except ModuleNotFoundError:
-    from metadata_support import parse_simple_metadata
+from tests.metadata_support import parse_simple_metadata
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "skills"
 EXPECTED_POLICIES = {
-    "setup-senler-skills": False,
-    "grill-with-docs": False,
-    "to-spec": False,
-    "to-tickets": False,
-    "implement": False,
-    "grilling": True,
+    "setup-senler-skills": True,
     "ask-plan-build": True,
-    "figma-task-steward": True,
-    "project-documentation": True,
-    "tdd": True,
-    "code-review": True,
+    "grilling": True,
     "unreal-project": True,
+    "project-documentation": True,
+    "code-review": True,
 }
 
 
+def frontmatter(skill_file: Path) -> dict[str, str]:
+    lines = skill_file.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0] != "---":
+        return {}
+
+    parsed: dict[str, str] = {}
+    for line in lines[1:]:
+        if line == "---":
+            return parsed
+        key, value = line.split(":", 1)
+        if key in parsed:
+            raise ValueError(f"duplicate frontmatter field: {key}")
+        parsed[key] = value.strip()
+    return {}
+
+
 class ReleaseContractTests(unittest.TestCase):
-    def test_release_contains_the_expected_valid_packages(self) -> None:
+    def test_packages_and_invocation_metadata(self) -> None:
         self.assertEqual(set(EXPECTED_POLICIES), {path.name for path in SKILLS.iterdir()})
         for name, implicit in EXPECTED_POLICIES.items():
             with self.subTest(skill=name):
                 root = SKILLS / name
-                self.assertTrue((root / "SKILL.md").is_file())
-                metadata = parse_simple_metadata(root / "agents" / "openai.yaml")
-                self.assertIn(f"${name}", metadata["interface"]["default_prompt"])
-                self.assertIs(
-                    implicit, metadata.get("policy", {}).get("allow_implicit_invocation", True)
-                )
+                header = frontmatter(root / "SKILL.md")
+                self.assertEqual({"name", "description"}, set(header))
+                self.assertEqual(name, header["name"])
+                self.assertTrue(header["description"])
 
-    def test_all_bundled_reference_links_resolve(self) -> None:
+                metadata_path = root / "agents" / "openai.yaml"
+                if not metadata_path.exists():
+                    # Metadata is optional; the default invocation policy is implicit.
+                    self.assertIs(implicit, True)
+                    continue
+                metadata = parse_simple_metadata(metadata_path)
+                interface = metadata["interface"]
+                for field in ("display_name", "short_description", "default_prompt"):
+                    self.assertIsInstance(interface[field], str)
+                    self.assertTrue(interface[field])
+                self.assertIn(f"${name}", interface["default_prompt"])
+                self.assertGreaterEqual(len(interface["short_description"]), 25)
+                self.assertLessEqual(len(interface["short_description"]), 64)
+                self.assertIs(implicit, metadata.get("policy", {}).get("allow_implicit_invocation", True))
+
+    def test_repository_markdown_links_resolve(self) -> None:
         link_pattern = re.compile(r"\[[^]]+\]\(([^)]+)\)")
-        for skill_file in SKILLS.glob("*/SKILL.md"):
-            with self.subTest(skill=skill_file.parent.name):
+        for markdown_file in ROOT.rglob("*.md"):
+            with self.subTest(markdown=str(markdown_file.relative_to(ROOT))):
                 for target in link_pattern.findall(
-                    skill_file.read_text(encoding="utf-8")
+                    markdown_file.read_text(encoding="utf-8")
                 ):
                     if "://" not in target and not target.startswith("#"):
-                        self.assertTrue((skill_file.parent / target).is_file(), target)
+                        path = target.split("#", 1)[0]
+                        self.assertTrue((markdown_file.parent / path).exists(), target)
 
-    def test_skill_instructions_are_project_neutral(self) -> None:
-        forbidden = ("TableGame", "InputDesign", "EventDesign", "CardDesign")
-        for skill_file in SKILLS.glob("*/SKILL.md"):
-            text = skill_file.read_text(encoding="utf-8")
-            with self.subTest(skill=skill_file.parent.name):
-                for term in forbidden:
-                    self.assertNotIn(term, text)
+    def test_active_skill_references_resolve(self) -> None:
+        sources = [
+            ROOT / "AGENTS.md",
+            ROOT / "README.md",
+            ROOT / "README.zh-CN.md",
+            *SKILLS.rglob("*.md"),
+            *SKILLS.rglob("*.yaml"),
+            *(ROOT / "docs" / "agents").glob("*.md"),
+        ]
+        for source in sources:
+            with self.subTest(source=str(source.relative_to(ROOT))):
+                references = set(
+                    re.findall(r"\$([a-z][a-z0-9-]*)", source.read_text(encoding="utf-8"))
+                )
+                self.assertLessEqual(references, set(EXPECTED_POLICIES))
 
-    def test_readme_explains_the_public_release(self) -> None:
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        for heading in (
-            "## Set and Use",
-            "## Workflow",
-            "## What Each Skill Does",
-            "## Credit",
+    def test_readme_catalogs_match_installed_packages(self) -> None:
+        for filename in ("README.md", "README.zh-CN.md"):
+            with self.subTest(readme=filename):
+                catalog = re.findall(
+                    r"^\| `([a-z0-9-]+)` \|",
+                    (ROOT / filename).read_text(encoding="utf-8"),
+                    re.MULTILINE,
+                )
+                self.assertCountEqual(EXPECTED_POLICIES, catalog)
+
+    def test_skill_sources_remain_project_neutral(self) -> None:
+        for source in SKILLS.rglob("*.md"):
+            with self.subTest(source=str(source.relative_to(SKILLS))):
+                text = source.read_text(encoding="utf-8")
+                self.assertNotIn("TableGame", text)
+                self.assertNotIn("senler007/skills", text)
+                self.assertNotIn("C:/Users/Administrator", text)
+
+    def test_mit_attributions_are_preserved(self) -> None:
+        license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
+        for required in (
+            "MIT License",
+            "Copyright (c) 2026 Matt Pocock",
+            "Copyright (c) 2026 senler007",
         ):
-            self.assertIn(heading, readme)
-
-        self.assertIn("Use only the stages your change needs", readme)
-        self.assertIn("optional", readme.lower())
-        self.assertNotIn("Every feature or solution goes through", readme)
-
-    def test_readmes_offer_bilingual_navigation(self) -> None:
-        english = (ROOT / "README.md").read_text(encoding="utf-8")
-        chinese = (ROOT / "README.zh-CN.md").read_text(encoding="utf-8")
-
-        self.assertIn("[简体中文](README.zh-CN.md)", english)
-        self.assertIn("[English](README.md)", chinese)
-        self.assertIn("Use only the stages your change needs", english)
-        self.assertIn("只运行这次变更真正需要的阶段", chinese)
-        self.assertIn("directly with a Spec", english)
-        self.assertIn("把 Spec 或一组 Tickets 直接交给", chinese)
+            self.assertIn(required, license_text)
 
 
 if __name__ == "__main__":

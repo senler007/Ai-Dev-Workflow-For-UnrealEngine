@@ -1,6 +1,0 @@
-interface:
-  display_name: "Code Review"
-  short_description: "Review standards spec and documentation"
-  default_prompt: "Use $code-review to review this change across Standards, Spec, and Documentation."
-policy:
-  allow_implicit_invocation: true

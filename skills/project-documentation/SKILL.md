@@ -1,128 +1,30 @@
 ---
 name: project-documentation
-description: Maintain authoritative project and module documents when requested or when stable behavior and maintenance entry points change. Follow the project's documentation map and its explicit journal policy.
+description: 用户要求维护项目文档，或功能变更需要同步现有模块行为与维护入口时使用。普通只读调查不生成文档。
 ---
 
-# Project Documentation
+# 固定文档架构与维护
 
-Keep durable project knowledge readable by people and useful to maintainers. A
-module guide explains both what a module does and where its implementation can be
-changed. The development record remains a concise dated account of completed
-work, not another source of project truth.
+采用本套 Skill 必须使用下面的路径和职责，大小写保持一致；这不是可选模板。不搜索其他文档目录、不接受替代路径映射，也不另外创建 Tracker 或文档配置文件。所有项目路径均从当前工作项目根目录解析，不从全局 Skill 安装目录解析。
 
-## Load the project's map
+只更新已确认、值得长期保留的事实，每项事实维护一处：
 
-Find the project-documentation configuration named by the repository's agent
-instructions, which may keep the map directly in AGENTS.md. Reuse existing
-authorities when no separate map exists; ask only about ownership that cannot
-be inferred. A missing journal or tracker configuration does not block the task.
+| 内容 | 归属 |
+| --- | --- |
+| 项目定位与导航 | `Docs/ProjectOverview.md` |
+| 规范术语 | `CONTEXT.md` |
+| 世界观与角色设定 | `Docs/Worldbuilding.md`（有世界观内容时使用） |
+| 协作上手、资源目录与命名 | `README.md` |
+| AI 工作流程与通用约束 | `AGENTS.md`；Unreal 通用技术细则使用 `unreal-project` Skill；项目专用命令和约束写入 `AGENTS.md` |
+| 功能设计、职责、维护入口和复查方式 | 对应的 `Docs/Modules/<功能名>.md` |
 
-Read only the configuration and candidate authorities needed for the current
-fact. Follow established casing, language, terminology, and style. Read
-[references/document-roles.md](references/document-roles.md) when ownership is
-unclear. Read
-[references/module-guide-structure.md](references/module-guide-structure.md)
-whenever creating or materially updating a module guide.
+## 接入与维护要求
 
-## Decide whether the fact is durable
-
-Write durable documentation only when information is confirmed and will help a
-future human understand or maintain the project. Typical durable facts include
-accepted behavior, canonical terminology, stable code or runtime responsibility,
-asset and configuration wiring, and architectural decisions with meaningful
-tradeoffs.
-
-Do not persist:
-
-- tentative ideas or unresolved alternatives;
-- ticket progress, current test output, commit or release status in module guides;
-- information already owned authoritatively elsewhere;
-- documentation changes during a read-only request.
-
-When confirmation is unclear, summarize the candidate fact and ask before
-writing it.
-
-## Keep module knowledge together
-
-Use one module guide as the human-readable front door for each large or
-independently understandable module. When applicable, the same guide contains:
-
-- an overview and the module's product boundaries;
-- a **Design section** for confirmed user-visible flows and rules;
-- an **Architecture section** for current code responsibilities, state ownership,
-  data flow, assets, configuration, and integration seams;
-- a Maintenance Map, common change recipes, and stable validation procedures.
-
-Architecture is a section of the module guide, not a standalone document. A
-small related rule belongs in an existing guide rather than a new file. Do not
-add empty headings merely to match a template.
-
-Update an existing module guide in the same task when implementation or confirmed
-design materially changes it. Creating a new module guide establishes a new
-long-lived module boundary and therefore always requires explicit human
-confirmation before writing the file. Do not create placeholders.
-
-## Keep one authority per fact
-
-Route each durable fact to one owner:
-
-- project identity and navigation -> project overview;
-- canonical term and terse meaning -> glossary;
-- confirmed module behavior and current implementation -> the applicable Design
-  or Architecture section of its module guide;
-- consequential rationale and tradeoffs -> ADR;
-- goals, acceptance criteria, dependencies, progress, current validation results,
-  and remaining work -> tracker.
-
-Other documents link to the authority and add only enough context to explain the
-link. The development record briefly reports completed work and links outward; it
-does not own rules, architecture, delivery scope, or status.
-
-## Check implementation health
-
-When documenting changed code, verify that each stable source unit has one
-coherent responsibility that can be described in one sentence. Treat a class
-that owns unrelated UI, input, persistence, validation, presentation, and
-integration concerns as a structural warning. Document current ownership
-honestly and name a sensible extraction seam, but do not expand the authorized
-task into an unapproved refactor.
-
-Derive maintenance details from current source, assets, and configuration. Never
-guess a path, binding, reader, material slot, or validation procedure.
-
-## Reconcile inconsistencies
-
-When implementation and durable documentation differ:
-
-1. Check the active Spec and Tickets.
-2. If they describe an in-progress transition, keep progress in the tracker.
-3. Otherwise, surface the exact conflict and ask which behavior is authoritative
-   unless the conversation already settled it.
-4. Update only the confirmed authority and authorized implementation scope.
-
-Never quietly rewrite documentation to match unexplained code or rewrite code to
-match unexplained documentation.
-
-## Maintain the daily development record
-
-Only when the project explicitly maintains a daily development record, update
-the configured record once after a task actually changes the project. Do not
-create a journal convention by default. Never create or update it for a read-only task.
-
-Use the configured language, path, and local date. Reuse the day's file and append
-without overwriting earlier work. Preserve user-written goal text and merge one
-conversation task into one concise actual-implementation section. When the file
-is absent, create only the minimal date, goal, and actual-implementation structure
-used by the project.
-
-Record actual results, key configuration, and direct validation. Include a small
-diagram only when it materially clarifies changed flow. Do not record plans,
-brainstorming, secrets, per-message chronology, or tracker status already owned
-by the tracker.
-
-## Report the maintenance result
-
-State which module guide or other authority changed, what it now owns, and which
-daily development record was updated. Report implementation, validation, Git,
-and release state separately. Keep generated documentation in the project's
-configured language even though this Skill source is English.
+- `AGENTS.md`、`README.md`、`CONTEXT.md`、`Docs/ProjectOverview.md` 是固定项目级文档；`Docs/Modules/<功能名>.md` 随实际模块建立。世界观文档仍按需使用。
+- 接入或维护时发现必需文档缺失，按上表在指定位置补齐已确认内容；缺少真实项目事实时只询问具体缺项，不询问用户选择另一套文档结构，不编造内容或建立空占位。只读调查、审查中仅报告缺失，不顺带写文件；采用其他架构的项目须先整理为本架构。
+- `AGENTS.md` 记录开发流程、Skill 入口、项目专用约束与实际工具命令；`README.md` 记录运行方式、资源目录、命名规范和资产版本与临时备份规则；`Docs/ProjectOverview.md` 记录项目简介、核心体验、文档导航及实际参考链接（如 Figma）。
+- 先读目标文档和相关事实，只更新变化部分；其他位置用链接，不重复抄规则。遵循现有中文风格，文件名、路径、Skill 名称和代码标识保持原样。
+- 不另建架构文档、空章节或占位文件；新模块指南仅在用户要求或已批准时创建。
+- 阶段性范围和进度沿用关联 GitHub Spec/Ticket；没有关联时使用当前已确认需求，不凭空建立 Tracker，不把编辑文档当作获准对外发消息。
+- 不生成每日开发记录，不恢复已删除的文档、目录或配置，不把工具输出和问答流水写入长期文档。
+- 检查本次改动的链接、路径和内容一致性；最终说明改了什么，不把静态检查写成运行验证。

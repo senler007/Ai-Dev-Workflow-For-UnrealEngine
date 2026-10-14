@@ -1,20 +1,13 @@
-# Unreal asset and Git safety
+# Unreal 资产与 Git 安全门禁
 
-Read for asset edits or Git operations that can overwrite .uasset, .umap, or
-external actor/object packages. Ordinary text work and read-only Git queries do
-not need an editor shutdown or an asset audit.
+仅在修改 Unreal 资产，或 Git 操作可能回写 `.uasset`、`.umap`、`Content/__ExternalActors__`、`Content/__ExternalObjects__` 时读取。普通文本修改和只读 Git 查询不需要加载，也不要求关闭编辑器。
 
-- Check only affected assets and real unsaved/uncommitted work. Editing in the
-  approved scope proceeds normally; do not create whole-project backups or
-  backup branches unless requested or required by an explicit project policy.
-- Before external Git writes, reconcile editor save conflicts for those assets.
-  Preserve user work; obtain a choice when an actual overwrite would discard it.
-  Do not treat a dirty repository as blanket permission to reset.
-- Resolve binary conflicts through the approved editor/version workflow, not
-  line merges or blanket ours/theirs choices. Prefer existing Git versions as
-  recovery sources; never assume a commit includes unsaved editor changes.
-- Avoid broad reset/restore/clean operations and deletion of LFS recovery data.
-  On failed recovery or merge, preserve the state and explain the actual failure
-  instead of chaining destructive retries.
-- Verify touched assets and expected behavior, including relevant external
-  packages. Git success or an unchanged main map alone does not prove integrity.
+恢复与备份统一遵循当前工作项目根目录 `README.md` 的“资产版本与临时备份”章节。该位置是固定约定，不从全局 Skill 安装目录向上寻找项目文档。
+
+## 实际操作检查
+
+- 在用户已授权范围内直接编辑，不重复确认；不要猜测导入设置、Skeleton 或替代资产。范围扩大时再说明具体目标并确认。
+- Git 回写前只核对受影响资产的未提交成果；确实会丢弃成果时先明确保留或舍弃方式。外部回写与编辑器中的同一资产存在保存冲突时，先协调保存并关闭相关编辑器，不能用磁盘版本覆盖未保存工作。
+- `.uasset`、`.umap` 冲突不逐行合并，优先使用双方已有 Git 版本，不强制复制两边原件。未确认的取舍由用户决定，不擅自批量选择 ours/theirs。
+- 不用 `git reset --hard`、`git checkout -- .`、`git restore .`、`git clean` 等批量命令意外丢弃用户成果；不清理仍承担恢复用途的 Git LFS 对象。合并或恢复失败时保留现场、停止继续回写，不连续尝试破坏性操作。
+- 完成后只核对本次涉及的资产和预期行为。涉及外部 Actor 包时检查对应对象及配置；Git 命令成功或主 `.umap` 未变化不能单独证明资产完整。

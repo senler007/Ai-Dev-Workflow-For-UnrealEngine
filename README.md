@@ -2,105 +2,102 @@ English | [简体中文](README.zh-CN.md)
 
 # Senler Skills
 
-A complete, globally installed workflow for project setup, requirements,
-implementation, Unreal development, review, documentation, and Figma task
-coordination. Install all 12 skills once, then initialize each project with one
-prompt. Project facts stay in the project; reusable instructions stay global.
+Six skills based on the current local versions. New features and behavior
+changes follow `grilling` -> `ask-plan-build` -> approved implementation,
+verification, review, and updates to changed durable documentation. Reuse settled
+answers and approvals; clear small edits proceed directly.
 
-## Set and Use
+| Skill | Purpose |
+| --- | --- |
+| `setup-senler-skills` | Initialize a project with the fixed document structure and current local skills. |
+| `grilling` | Clarify consequential decisions and consolidate outcomes, boundaries, and acceptance. |
+| `ask-plan-build` | Consume the clarified requirements, propose concrete changes, and implement after approval. |
+| `unreal-project` | Apply Unreal ownership, C++/Blueprint, UI, asset, and verification rules. |
+| `code-review` | Review one complete change set against conventions, requirements, and documentation. |
+| `project-documentation` | Maintain confirmed facts under the mandatory document structure. |
 
-With Node.js/npm and Git installed, run:
+## Install everything with one command
 
-```bash
+Install Node.js 22.20 or newer and Git, then run:
+
+```sh
 npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
 ```
 
-This uses the [Skills CLI](https://github.com/vercel-labs/skills) to install every
-skill in this repository for Codex, globally, including references and scripts.
-`--copy` avoids symlinks. The command updates same-name installed packages; keep
-personal edits separately. It does not modify a project or connect accounts.
-If skills are not listed, restart Codex. See the [Chinese setup guide](docs/INSTALL.zh-CN.md).
+This installs all six current packages globally for Codex, shared across projects.
+GitHub is the distribution source; Codex reads the installed local files. Projects
+do not need their own copies. The command updates matching global skills, so
+preserve unpublished local edits first. It does not uninstall previously installed
+packages that have since been removed from this repository; remove obsolete skills
+you no longer use separately.
 
-Open a new or existing project in Codex and send:
+## Initialize a new project
 
-```text
-Use $setup-senler-skills to initialize this project with all globally installed
-Senler skills. Reuse existing documents and conventions, and configure the
-project's workflow and document map.
-```
-
-Setup inspects the project, asks only for missing facts, and merges the required
-rules into its AGENTS.md. It does not copy skills into each project. It preserves
-local customizations and identifies same-name local/global conflicts. Re-running
-setup updates existing sections instead of resetting them.
-
-The document map covers AGENTS.md, README.md, Docs/ProjectOverview.md, CONTEXT.md,
-Docs/Worldbuilding.md and established module guides. Only create documents with
-real confirmed content; worldbuilding is optional. Keep existing paths when the
-project uses another layout. No mandatory empty files, daily journal, or tracker.
-
-## Workflow
-
-For new features and behavior changes:
+After the global installation above, open the target project in Codex
+and send:
 
 ```text
-Read project facts -> grilling -> ask-plan-build -> approve the plan
-                   -> implement and verify -> code-review -> update stable docs
+Use $setup-senler-skills to initialize this project.
 ```
 
-`grilling` resolves consequential decisions; `ask-plan-build` consumes those
-answers without a second interview. Clear requirements need only a brief
-consolidation. Small explicit changes and already approved plans proceed
-directly. Unreal work also applies `unreal-project`.
+Provide its name, purpose, and core experience in the same message when known.
+The initializer creates AGENTS.md, README.md, CONTEXT.md, and
+Docs/ProjectOverview.md at the fixed locations, using confirmed project facts.
+It configures grilling -> ask-plan-build -> approved implementation. It asks
+only for necessary missing facts, preserves existing documents, and avoids
+duplicate rules on repeat runs. Worldbuilding and module guides follow the
+conditions below. It uses the currently installed local skills without fetching
+an older remote version. It does not create an engine project or connect Figma.
+Reopen the project conversation, or restart Codex if needed, to refresh a newly
+installed entry point.
 
-Example:
+## Required project documents
 
-```text
-Use $grilling to add saved character appearance presets to this project.
-```
+These paths and responsibilities are part of the workflow contract. Do not
+search for or adapt to alternative document layouts. Paths are relative to the
+working project's root, never to the global skill installation directory.
 
-After clarification, Codex presents a concrete plan through `ask-plan-build`.
-After your approval it implements, verifies, reviews, and updates changed facts.
-A design-only discussion does not automatically become implementation.
-
-All older Spec/Ticket skills are also installed. Use only the stages your change needs when you explicitly choose that workflow: `grill-with-docs` records
-confirmed design, `to-spec` creates change scope, `to-tickets` provides optional
-slicing, and `implement` works directly with a Spec or Tickets. Their explicit
-invocation governs their documented publication/commit behavior; the default
-feature workflow does not silently create issues or commits.
-
-## What Each Skill Does
-
-| Skill | Role |
+| Document | Responsibility |
 | --- | --- |
-| [setup-senler-skills](skills/setup-senler-skills/SKILL.md) | Initialize or adapt a project's document map and workflow. |
-| [grilling](skills/grilling/SKILL.md) | Clarify requirements in decision dependency order. |
-| [ask-plan-build](skills/ask-plan-build/SKILL.md) | Turn those answers into a plan and implement after approval. |
-| [unreal-project](skills/unreal-project/SKILL.md) | Apply Unreal code, Blueprint, UI, asset, and verification conventions. |
-| [code-review](skills/code-review/SKILL.md) | Review Standards, Spec, and Documentation, including uncommitted work. |
-| [project-documentation](skills/project-documentation/SKILL.md) | Maintain confirmed project facts and module guides. |
-| [figma-task-steward](skills/figma-task-steward/SKILL.md) | Dispatch task chats, coordinate shared writes, and preserve handovers. |
-| [grill-with-docs](skills/grill-with-docs/SKILL.md) | Clarify a design, then persist its confirmed decisions. |
-| [to-spec](skills/to-spec/SKILL.md) | Create a compact specification for one change. |
-| [to-tickets](skills/to-tickets/SKILL.md) | Split a specification into deliverable slices. |
-| [implement](skills/implement/SKILL.md) | Execute an explicitly selected Spec/Ticket workflow. |
-| [tdd](skills/tdd/SKILL.md) | Develop through behavioral tests at public seams. |
+| `AGENTS.md` | Team rules, workflow, skill entry points, project constraints, and actual tool commands |
+| `README.md` | Startup, resource directories, naming, and asset version/temporary backup rules |
+| `CONTEXT.md` | Project terms and meanings |
+| `Docs/ProjectOverview.md` | Project identity, core experience, document navigation, and reference links |
+| `Docs/Worldbuilding.md` | World and character facts; optional |
+| `Docs/Modules/<feature>.md` | Module behavior, design, ownership, implementation, maintenance, and stable validation |
 
-Installation includes all of them. Invocation follows the task and project
-rules; installing a skill does not force every task through every skill.
+The first four files are required. Create module guides for real modules and
+worldbuilding when needed. Populate missing required documents with confirmed
+facts at these locations; ask for unknown facts without inventing content or
+creating empty placeholders. Read-only tasks report missing documents without
+writing them. Do not generate daily journals, standalone architecture documents,
+or restore deleted configuration. The maintenance authority is
+[project-documentation](skills/project-documentation/SKILL.md).
 
-Figma coordination additionally uses a connected Figma plugin, Codex desktop
-project/chat tools, and Python 3.8+ for its bundled ledger. Configure your own
-Figma link and explicitly enable coordination. Automatic daily handover needs a
-user-requested schedule. Unreal asset work needs the project's working editor
-integration. Setup reports missing capabilities without blocking unrelated work.
-No personal project data, credentials, ledger, or account authorization is bundled.
+## Use
 
-Run the same install command to update all skills. It updates global instructions;
-it does not rewrite existing project documents. Run setup in a project to adapt
-its rules when needed. Preserve the Figma runtime ledger outside the package.
+Install all six complete directories under `skills/` into your agent's skill
+directory; they can be shared globally. Include their existing references and
+metadata. Keep consumer-project documents in each project. This repository's
+root AGENTS.md governs skill maintenance, not the consumer project's workflow.
+
+Examples:
+
+- `Use $grilling to clarify this feature and pass the outcome to ask-plan-build.`
+- `Use $ask-plan-build to propose changes from our confirmed requirements.`
+- `Use $code-review to inspect this task's uncommitted changes.`
+- `Use $project-documentation to update the confirmed feature documentation.`
+
+Use `unreal-project` only for Unreal work. Record actual content roots and
+resource-table names in the project's README.md. Record the engine version,
+normal editor-close command, and verification commands in its AGENTS.md. Never
+assume a project includes a particular asset, script, or custom tool. Preserve
+version-specific failure guidance and apply it under its stated conditions.
+
+The workflow does not automatically commit or push. Publication, cross-chat
+messages, and task coordination require the user's applicable authorization.
 
 ## Credit
 
-Inspired by Matt Pocock's AIHero Skills workflow. MIT licensed and independently
-maintained by senler007; no automatic upstream synchronization. See [LICENSE](LICENSE).
+Derived from Matt Pocock's AIHero skills and independently maintained by senler007
+under the [MIT license](LICENSE).
