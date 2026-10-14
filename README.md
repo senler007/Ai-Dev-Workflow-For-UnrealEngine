@@ -2,109 +2,64 @@ English | [简体中文](README.zh-CN.md)
 
 # Senler Skills
 
-Seven skills based on the current local versions. New features and behavior
-changes follow `grilling` -> `ask-plan-build` -> approved implementation,
-verification, review, and updates to changed durable documentation. Reuse settled
-answers and approvals; clear small edits proceed directly.
+An AI collaboration workflow I put together while developing a game, and intend to reuse in future projects.
+As a project grows, unclear requirements and scattered documents lead to repeated questions and rework. These skills give documentation, clarification, planning, implementation, and review a shared structure.
 
-| Skill | Purpose |
-| --- | --- |
-| `setup-senler-skills` | Initialize a project with the fixed document structure and current local skills. |
-| `figma-task-steward` | Coordinate Figma tasks across dedicated chats, serialized implementation, acceptance, and handoffs. |
-| `grilling` | Clarify consequential decisions and consolidate outcomes, boundaries, and acceptance. |
-| `ask-plan-build` | Consume the clarified requirements, propose concrete changes, and implement after approval. |
-| `unreal-project` | Apply Unreal ownership, C++/Blueprint, UI, asset, and verification rules. |
-| `code-review` | Review one complete change set against conventions, requirements, and documentation. |
-| `project-documentation` | Maintain confirmed facts under the mandatory document structure. |
+## Install and initialize
 
-## Install everything with one command
-
-Install Node.js 22.20 or newer and Git, then run:
+With Node.js 22.20+ and Git installed, one command installs all seven skills:
 
 ```sh
 npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
 ```
 
-This installs all seven current packages globally for Codex, shared across projects.
-GitHub is the distribution source; Codex reads the installed local files. Projects
-do not need their own copies. The command updates matching global skills, so
-preserve unpublished local edits first. It does not uninstall previously installed
-packages that have since been removed from this repository; remove obsolete skills
-you no longer use separately.
+Install globally once and share the skills across projects, without project-local copies. Updates replace matching skills, so preserve your own edits first.
 
-## Initialize a new project
-
-After the global installation above, open the target project in Codex
-and send:
+Open a new project in Codex and send this, together with its name, purpose, and core experience:
 
 ```text
 Use $setup-senler-skills to initialize this project.
 ```
 
-Provide its name, purpose, and core experience in the same message when known.
-The initializer creates AGENTS.md, README.md, CONTEXT.md, and
-Docs/ProjectOverview.md at the fixed locations, using confirmed project facts.
-It configures grilling -> ask-plan-build -> approved implementation. It asks
-only for necessary missing facts, preserves existing documents, and avoids
-duplicate rules on repeat runs. Worldbuilding and module guides follow the
-conditions below. It uses the currently installed local skills without fetching
-an older remote version. It does not create an engine project or connect Figma.
-Reopen the project conversation, or restart Codex if needed, to refresh a newly
-installed entry point.
+It creates project documents and workflow rules, preserving and completing existing content. When joining a project that already uses this workflow, install the skills, sync the latest project files, and start a new Codex conversation. No reinitialization is needed.
 
-## Required project documents
+## Project documents
 
-These paths and responsibilities are part of the workflow contract. Do not
-search for or adapt to alternative document layouts. Paths are relative to the
-working project's root, never to the global skill installation directory.
+This skill set uses the following fixed structure. All paths are relative to your project root.
 
-| Document | Responsibility |
+- `Docs/ProjectOverview.md`: Project introduction, core experience, document navigation, and references such as Figma.
+- `AGENTS.md`: Team rules, workflow, skill entry points, and project-specific commands.
+- `README.md`: How to run the project, resource directories, naming, and asset management.
+- `CONTEXT.md`: Project terminology and definitions.
+- `Docs/Worldbuilding.md`: World and character information, when needed.
+- `Docs/Modules/<feature>.md`: Design, responsibilities, implementation, and maintenance for actual modules, created as needed.
+
+Maintain each fact in one place. See [project-documentation](skills/project-documentation/SKILL.md) for the detailed rules.
+
+## Working on a feature
+
+**Start a new feature with `$grilling` to clarify the requirements.** It asks about real uncertainties to reduce rework. When the requirements are already clear, it summarizes them without inventing more questions.
+
+`ask-plan-build` then uses those answers to propose concrete changes and implements them after approval. Review the changes and update affected documentation before finishing. Reuse existing answers and approvals; clear small edits proceed directly.
+
+| Skill | What it does |
 | --- | --- |
-| `AGENTS.md` | Team rules, workflow, skill entry points, project constraints, and actual tool commands |
-| `README.md` | Startup, resource directories, naming, and asset version/temporary backup rules |
-| `CONTEXT.md` | Project terms and meanings |
-| `Docs/ProjectOverview.md` | Project identity, core experience, document navigation, and reference links |
-| `Docs/Worldbuilding.md` | World and character facts; optional |
-| `Docs/Modules/<feature>.md` | Module behavior, design, ownership, implementation, maintenance, and stable validation |
+| `setup-senler-skills` | Initialize project documents and workflow rules. |
+| `grilling` | Clarify requirements, boundaries, and acceptance criteria. |
+| `ask-plan-build` | Turn clarified requirements into a plan and implement after approval. |
+| `unreal-project` | Apply UE rules for C++/Blueprint responsibilities, resources, asset operations, and verification. |
+| `code-review` | Check changes against requirements and project rules. |
+| `project-documentation` | Keep project documentation consistent with implementation. |
+| `figma-task-steward` | Coordinate Figma tasks through dedicated chats, serialized implementation, and handoffs. |
 
-The first four files are required. Create module guides for real modules and
-worldbuilding when needed. Populate missing required documents with confirmed
-facts at these locations; ask for unknown facts without inventing content or
-creating empty placeholders. Read-only tasks report missing documents without
-writing them. Do not generate daily journals, standalone architecture documents,
-or restore deleted configuration. The maintenance authority is
-[project-documentation](skills/project-documentation/SKILL.md).
+You do not need to name every skill each time; use them according to project rules and task needs. UE rules apply only to UE projects. To use the Figma steward, connect Figma tools, have Python 3 available, and record the file in Docs/ProjectOverview.md. Then ask:
 
-## Use
+```text
+Use $figma-task-steward to manage this project's Figma daily tasks, create dedicated task chats, and coordinate execution.
+```
 
-Install all seven complete directories under `skills/` into your agent's skill
-directory; they can be shared globally. Include their existing references and
-metadata. Keep consumer-project documents in each project. This repository's
-root AGENTS.md governs skill maintenance, not the consumer project's workflow.
+Installation does not start a steward or create a schedule. Keep project coordination authorization and handoff arrangements in AGENTS.md.
 
-Examples:
+---
 
-- `Use $grilling to clarify this feature and pass the outcome to ask-plan-build.`
-- `Use $ask-plan-build to propose changes from our confirmed requirements.`
-- `Use $code-review to inspect this task's uncommitted changes.`
-- `Use $project-documentation to update the confirmed feature documentation.`
-
-Use `unreal-project` only for Unreal work. Record actual content roots and
-resource-table names in the project's README.md. Record the engine version,
-normal editor-close command, and verification commands in its AGENTS.md. Never
-assume a project includes a particular asset, script, or custom tool. Preserve
-version-specific failure guidance and apply it under its stated conditions.
-
-The workflow does not automatically commit or push. Publication, cross-chat
-messages, and task coordination require the user's applicable authorization.
-
-## Figma task coordination
-
-The all-skills command includes `figma-task-steward`. Connect Figma read/write tools, have Python 3 available, and record the actual Figma file in Docs/ProjectOverview.md. Codex supplies independent-chat and messaging tools. Record the project scope, coordination authorization, and any daily handoff schedule in AGENTS.md.
-
-To start, ask: `Use $figma-task-steward to manage this project’s Figma daily tasks, create dedicated task chats, and coordinate execution.` Installation and document initialization alone do not activate a steward or create a schedule.
-
-## Credit
-
-Derived from Matt Pocock's AIHero skills and independently maintained by senler007
-under the [MIT license](LICENSE).
+Inspired by Matt Pocock's AIHero Skills and independently maintained by senler007 under the [MIT license](LICENSE).
