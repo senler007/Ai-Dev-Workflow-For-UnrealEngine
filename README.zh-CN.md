@@ -20,12 +20,11 @@ npx --yes skills add senler007/Ai-Dev-Workflow --skill '*' --agent codex --globa
 使用 $setup-senler-skills 初始化当前项目。
 ```
 
-
 ## 做游戏必需的项目文档
 项目一定要有明确的文档风格,不然后面会很痛苦.
 使用我这套 Skill，就统一采用下面的通用文档架构。路径都相对于自己的项目根目录。
 - Docs/ProjectOverview.md : 项目简介、核心体验、文档导航与其他重要资料(如figma参考等)的放置处
-- AGENTS.md : 团队工作规则、开发流程与 Skill 入口
+- AGENTS.md : 团队工作规则、开发流程与 Skill 使用规则。
 - README.md : 仓库说明、资源目录、命名与资产管理规范
 - CONTEXT.md : 项目术语及其含义
 - Docs/Worldbuilding.md : 世界观(可选,一般放一些文学类的东西)
