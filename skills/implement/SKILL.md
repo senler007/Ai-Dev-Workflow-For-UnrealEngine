@@ -12,8 +12,8 @@ Run typechecking regularly, single test files regularly, and the full test suite
 once at the end.
 
 Use `$project-documentation` to synchronize confirmed outcomes with existing
-module guides and update the configured daily development record. Ask before
-creating a new module guide.
+module guides and update the daily development record only if configured.
+Ask before creating a new module guide.
 
 Once done, use `$code-review` to review the work.
 

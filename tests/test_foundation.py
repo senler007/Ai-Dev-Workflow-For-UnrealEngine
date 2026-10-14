@@ -136,7 +136,7 @@ class FoundationContractTests(unittest.TestCase):
         self.assertNotIn("- Architecture:", template)
         self.assertIn("Module documentation:", template)
 
-    def test_documentation_skill_requires_one_daily_record_for_modifying_tasks(self) -> None:
+    def test_documentation_skill_respects_configured_daily_records(self) -> None:
         instructions = (
             SKILLS_ROOT / "project-documentation" / "SKILL.md"
         ).read_text(encoding="utf-8")

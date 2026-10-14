@@ -1,6 +1,6 @@
 ---
 name: project-documentation
-description: Maintain authoritative human-readable module guides and the configured daily development record. Use when confirmed behavior, terminology, code ownership, data flow, assets, configuration, ADRs, or tracker outcomes need routing or updating; when code and documentation disagree; or after a task changes the project.
+description: Maintain authoritative project and module documents when requested or when stable behavior and maintenance entry points change. Follow the project's documentation map and its explicit journal policy.
 ---
 
 # Project Documentation
@@ -13,9 +13,9 @@ work, not another source of project truth.
 ## Load the project's map
 
 Find the project-documentation configuration named by the repository's agent
-instructions. It must map the project's authorities and development-record path.
-If either is missing, explain that `$setup-senler-skills` should be run; do not
-silently impose default paths.
+instructions, which may keep the map directly in AGENTS.md. Reuse existing
+authorities when no separate map exists; ask only about ownership that cannot
+be inferred. A missing journal or tracker configuration does not block the task.
 
 Read only the configuration and candidate authorities needed for the current
 fact. Follow established casing, language, terminology, and style. Read
@@ -105,9 +105,9 @@ match unexplained documentation.
 
 ## Maintain the daily development record
 
-After a task actually changes code, documentation, configuration, assets,
-Git/Editor state, or settles a durable decision, update the configured record
-once before reporting completion. Never create or update it for a read-only task.
+Only when the project explicitly maintains a daily development record, update
+the configured record once after a task actually changes the project. Do not
+create a journal convention by default. Never create or update it for a read-only task.
 
 Use the configured language, path, and local date. Reuse the day's file and append
 without overwriting earlier work. Preserve user-written goal text and merge one

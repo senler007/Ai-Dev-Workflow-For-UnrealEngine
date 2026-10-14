@@ -3,7 +3,7 @@ name: code-review
 description: Review the changes since a fixed point (commit, branch, tag, or merge-base) along three axes — Standards, Spec, and Documentation — and report them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
 ---
 
-Three-axis review of the diff between `HEAD` and a fixed point the user supplies:
+Three-axis review of one fixed change set, including uncommitted work when that is the requested scope:
 
 - **Standards** — does the code conform to this repo's documented coding standards?
 - **Spec** — does the code faithfully implement the originating issue / PRD / spec?
@@ -11,26 +11,38 @@ Three-axis review of the diff between `HEAD` and a fixed point the user supplies
 
 Run all three axes in the current conversation. Do not create sub-agents.
 
-The issue tracker and project-documentation layout should have been provided to you — run `$setup-senler-skills` if `docs/agents/issue-tracker.md` or `docs/agents/project-docs.md` is missing.
+Read applicable AGENTS.md instructions and their documentation/tracker map. Use existing `docs/agents/issue-tracker.md` and `docs/agents/project-docs.md` when configured; their absence does not require setup or block review. The current user request and accepted plan can be the specification.
 
 ## Process
 
-### 1. Pin the fixed point
+### 1. Pin the fixed change set
 
-Whatever the user said is the fixed point — a commit SHA, branch name, tag, `main`, `HEAD~5`, etc. If they didn't specify one, ask for it.
+Honor the requested branch, PR, commit, or worktree scope. For delivery review,
+review the current task's actual edits without asking the user to provide a ref.
 
-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+- For committed branch work, resolve the supplied/default target branch, then
+  capture `git diff <fixed-point>...HEAD` and
+  `git log <fixed-point>..HEAD --oneline`.
+- For worktree changes, capture `git diff HEAD` for staged and unstaged tracked
+  changes, plus `git ls-files --others --exclude-standard` and the relevant
+  untracked files. With no HEAD yet, inspect the initial index and new files.
+- For a since-commit request, resolve that commit and compare its tree to the
+  requested endpoint; do not silently change this into a merge-base comparison.
 
-Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here — not inside the review passes.
+Record the resolved baseline, selected paths, and current file hashes or a
+snapshot. Keep the same contents for every pass. Separate pre-existing unrelated
+edits from this task. An invalid ref needs correction; an empty committed diff
+must not hide worktree changes. Report no changes only after checking the full
+requested scope. If files change during review, refresh affected findings.
 
 ### 2. Identify the spec source
 
-Look for the originating spec, in this order:
-
-1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in `docs/agents/issue-tracker.md`.
-2. A path the user passed as an argument.
-3. A PRD/spec file under `docs/`, `specs/`, or `.scratch/` matching the branch name or feature.
-4. If nothing is found, ask the user where the spec is. If they say there isn't one, skip the **Spec** axis and report "no spec available".
+Use the user's current request, accepted clarification/plan, and any supplied
+Spec/Ticket or PR as the scope authority. Follow linked issues through the
+project's actual tracker configuration; inspect matching local specifications
+when useful. Ask only about material missing requirements. A separate issue or
+specification file is not required. If no requirement evidence exists, report
+that limitation on the Spec axis and continue the other passes.
 
 ### 3. Identify the standards sources
 
@@ -58,11 +70,11 @@ Each smell reads *what it is* → *how to fix*; match it against the diff:
 
 ### 4. Identify the documentation sources
 
-Read `docs/agents/project-docs.md`, `$project-documentation`, and the module guides or other documentation authorities affected by the diff.
+Read the configured map (AGENTS.md or an existing `docs/agents/project-docs.md`), `$project-documentation`, and the module guides or other authorities affected by the diff.
 
 ### 5. Run the three review passes
 
-Use the same diff command and commit list for every pass.
+Use the same captured change set and requirement evidence for every pass.
 
 **Standards pass:**
 
@@ -73,7 +85,7 @@ Use the same diff command and commit list for every pass.
 **Spec pass:**
 
 - Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong.
-- Quote the spec line for each finding.
+- Cite the requirement or accepted user decision for each finding.
 
 If the spec is missing, skip the Spec pass and note this in the final report.
 

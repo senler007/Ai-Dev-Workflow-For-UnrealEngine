@@ -1,4 +1,6 @@
 interface:
   display_name: "Figma 任务管家"
-  short_description: "逐卡启动独立澄清会话，串行操作项目，管理空闲只读、借阅与跨天交接"
-  default_prompt: "使用 $figma-task-steward 管理当前项目的 Figma 每日安排，保留任务边界和已有成果，逐卡实际开始澄清；共享项目操作串行，空闲只读原子登记后直接查阅。调度只经当前管家，排队安静等待，实际授权后一次派发，不群发状态或规则通知。"
+  short_description: "逐卡澄清与派发任务，并行静态调查，串行修改与编辑器操作，保留跨天成果"
+  default_prompt: "使用 $figma-task-steward 管理当前项目的 Figma 任务，按实际授权派发、交接和回报；静态调查并行，修改与编辑器操作串行。"
+policy:
+  allow_implicit_invocation: true

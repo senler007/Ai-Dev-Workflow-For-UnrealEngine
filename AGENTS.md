@@ -11,11 +11,16 @@
 
 ## Upstream behavior
 
-The author-published `grilling`, `ask-plan-build`, and `figma-task-steward`
-packages follow their own current instructions. The requested September 2026
-release preserves those installed versions, including dependency-ordered
-question rounds, the ask/plan/build response boundary, and opt-in task-chat
-coordination. The upstream-baseline rules below apply to the other packages.
+The complete package is installed globally. Project setup reuses existing
+project documents and records routing in the project's own AGENTS.md.
+New features use `grilling` -> `ask-plan-build` -> approved implementation;
+clear small edits and approved plans do not repeat clarification or approval.
+Unreal conventions, review, and documentation apply when relevant. Figma
+coordination requires the current user's actual activation and permissions.
+Keep all existing explicit Spec/Ticket workflows available; they are not
+mandatory stages of the default feature workflow. Never export one project's
+paths, account links, runtime ledger, schedule, or authorization as defaults.
+The upstream-baseline rules below apply to the retained derived workflows.
 
 - Treat Matt Pocock's current Skill as the behavioral baseline for every derived
   workflow Skill.

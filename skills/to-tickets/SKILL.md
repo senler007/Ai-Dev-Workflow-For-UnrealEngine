@@ -7,7 +7,7 @@ description: Break a plan, Spec, or the current conversation into a set of trace
 
 Break a plan, Spec, or conversation into a set of **Tickets** — tracer-bullet vertical slices, each declaring the Tickets that **block** it.
 
-The issue tracker should have been provided to you — run `$setup-senler-skills` if not.
+Read the configured tracker in AGENTS.md or its referenced files. If no destination is configured, use `$setup-senler-skills` to resolve that choice for this requested Ticket set; preserve the rest of the project setup. A separate configuration file is not required.
 
 ## Process
 

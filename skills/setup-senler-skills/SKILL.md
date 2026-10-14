@@ -1,83 +1,106 @@
 ---
 name: setup-senler-skills
-description: Configure a repository to use the Senler skills workflow. Use when the user explicitly asks to set up Senler skills, choose a GitHub/local/custom issue tracker, or establish project-documentation paths and agent guidance.
+description: Initialize or adapt a project to the globally installed Senler workflow, including project docs, grilling-to-plan routing, Unreal conventions, and Figma task coordination. Use when the user asks to set up this workflow in a new or existing project.
 ---
 
-# Setup Senler Skills
+# Set up the whole workflow
 
-Configure the repository once without replacing conventions that already work.
-This skill is explicit-only: never run it merely because another workflow skill
-is being used.
+This explicit setup request authorizes the project documentation and instruction
+changes needed to adopt the workflow. Inspect first, preserve existing work,
+then complete setup. Do not ask for approval again for the requested setup.
+Ask only for missing product facts or an actual conflicting convention. This
+skill does not implement a product feature, publish tracker work, activate
+unrequested automations, or enroll unrelated chats.
 
-## Inspect the repository
+## Discover the current project
 
-Read only enough context to locate:
+Locate the real project root, applicable agent instructions, existing documents,
+Git remote, language, engine/toolchain, and available tool connections. Reuse
+existing names, directory casing, authorities, and user decisions. A blank
+project may need its purpose and intended audience from the user; ask together
+for the few unknowns that affect the initial documents. Do not infer a game's
+world or features from its folder name.
 
-- the repository root and Git remote;
-- existing agent instruction files such as `AGENTS.md` or `CLAUDE.md`;
-- existing project overview, glossary, module guides, ADR, and tracker documentation;
-- any existing daily development-record convention;
-- the established documentation directory casing and project language.
+All skills remain in the user's global installation. Resolve the installed
+skill paths instead of copying skills into the project or hardcoding a machine
+path. If a project already has same-name skills, inspect them and explicitly
+select the intended source in its rules; preserve local customizations. Do not
+silently delete them or assume that duplicate names are merged.
 
-Existing paths, casing, terminology, and language take precedence over the
-defaults in this skill. Do not create parallel files for roles that already have
-an authoritative owner.
+## Prepare project documents
 
-## Confirm the configuration
+Use [the document templates](references/project-docs.md). Existing owners take
+precedence. Create only documents for which confirmed content exists:
 
-Summarize what was found, then confirm choices that cannot be inferred safely:
+- AGENTS.md: the workflow entry, document map, conventions, tool boundaries.
+- README.md: actual project setup/use and resource or repository conventions.
+- Docs/ProjectOverview.md: confirmed project purpose, experience, navigation,
+  and supplied reference links, including Figma when available.
+- CONTEXT.md: actual terms when a glossary is useful.
+- Docs/Worldbuilding.md: supplied world and character facts for narrative projects.
+- Docs/Modules/: the module-guide convention; create a guide only for a real
+  established module, with explicit human confirmation of a new guide boundary.
 
-1. **Tracker mode.** Recommend GitHub when the Git remote identifies a GitHub
-   repository; otherwise recommend local. Also support a custom tracker.
-2. **Agent instruction file.** Update an existing instruction file. If none
-   exists, ask before creating one and recommend `AGENTS.md` for Codex-first use.
-3. **Project-document locations.** Reuse existing owners. For missing roles,
-   propose a project overview, glossary, module-guide directory or naming
-   convention, and ADR directory, adapting names and casing to the repository.
-   Module guides co-locate Design, Architecture, and Maintenance Map sections;
-   do not propose a standalone Architecture document.
-4. **Development record.** Reuse an existing dated task journal. When none exists,
-   propose `docs/DevelopmentRecord/YYYY-MM-DD.md`, adapting directory casing to
-   the repository.
-5. **Document language.** Infer it from durable project documentation and ask
-   only when mixed usage leaves the answer ambiguous.
+Merge changed sections rather than replacing existing files. Do not create empty
+files/directories, invented capabilities, or a standalone Architecture document.
+Do not resurrect deliberately deleted documents or add a daily record unless
+this project already requires one or the user requests it.
 
-Show the exact files and substantive configuration before writing, then wait for
-the user's explicit approval. Do not create empty project, glossary, module-guide,
-or ADR documents during setup.
+Keep the role map directly in AGENTS.md unless a separate map already exists.
+Reuse an established tracker. Without one, current requests and approvals are
+the scope authority; no issue service or local tracker needs to be created.
+For explicitly requested tracked work without a destination, ask which tracker
+and repository or local directory to use, then record the answer in the existing
+map before returning to that workflow. Do not skip this choice by merely leaving
+the tracker unconfigured. The existing references support
+[GitHub](references/issue-tracker-github.md),
+[local files](references/issue-tracker-local.md), and
+[another service](references/issue-tracker-custom.md).
 
-## Write the configuration
+## Connect all installed skills
 
-Use the applicable tracker reference:
+Merge these routing rules into the project's agent instructions:
 
-- GitHub: [references/issue-tracker-github.md](references/issue-tracker-github.md)
-- Local: [references/issue-tracker-local.md](references/issue-tracker-local.md)
-- Custom: [references/issue-tracker-custom.md](references/issue-tracker-custom.md)
+1. New features and behavior changes start with `$grilling`. Inspect existing
+   implementation first. Reuse existing answers; if clear, summarize without
+   manufacturing questions.
+2. `$ask-plan-build` consumes that summary, proposes concrete changes and
+   validation, then implements the approved scope. Do not repeat Ask or approval.
+   Small explicit edits and already approved implementation proceed directly.
+3. Apply `$unreal-project` to Unreal work. Follow real engine versions, content
+   ownership, and connected editor tools. Non-Unreal tasks do not activate it.
+4. Review logic changes with `$code-review`, fix authorized findings, and verify
+   affected behavior. Update stable facts with `$project-documentation`.
+5. Use `$figma-task-steward` when the user enables Figma task management. Keep
+   static reading and clarification parallel; coordinate shared writes, builds,
+   tests, and editor actions serially. Do not enroll ordinary independent chats.
+6. Preserve the installed `$grill-with-docs`, `$to-spec`, `$to-tickets`,
+   `$implement`, and `$tdd` workflows for explicit use; publishing and committing
+   remain governed by the selected workflow and the user's request.
 
-Create or update two small agent-facing configuration files in the repository's
-existing agent-documentation directory. Prefer `docs/agents/` only when the
-repository has no established location:
+## Resolve environment-dependent capabilities
 
-- `issue-tracker.md`, based on the selected tracker reference;
-- `project-docs.md`, based on
-  [references/project-docs.md](references/project-docs.md).
+Installation of the whole package is complete even when an external connector
+has not been configured. Check only the capabilities the project will use and
+report specific missing connections. Do not claim connected or enabled without
+tool evidence, and do not stop unrelated setup for a missing connector.
 
-Add a concise `## Senler skills` section to the confirmed agent instruction file.
-It should tell future agents where those two configurations live and to follow
-them, including the configured daily development record. Merge with an existing
-section instead of duplicating it.
+For Unreal, record the actual engine and approved editor access. Shared defaults
+live in `$unreal-project`; project-specific commands and asset roots stay here.
+Do not import another project's custom close command, asset paths, or grants.
 
-Record actual repository-specific values, not unresolved placeholders. Avoid
-copying the detailed document-role rules into multiple files; the configuration
-should map roles to paths and defer maintenance behavior to
-`$project-documentation`.
+For Figma coordination, retain the real Figma link, task-page name, user timezone,
+and any requested handover schedule in the project overview or existing config.
+Confirm Figma access and Codex project/chat/message tools when activation is
+requested. Register actual authorization for participating chats and board
+updates. Do not copy another user's consent, ledger, thread IDs, or schedule.
+An unavailable connection remains an explicit setup item; the rest proceeds.
 
-## Finish
+## Verify and finish
 
-Use `$project-documentation` to record the completed setup in the configured
-development record.
-
-Report the tracker mode, configuration files, instruction file, document
-language, development-record path, reused authorities, and proposed-but-uncreated
-module-guide convention. Call out any ambiguity left for the user. Do not start
-a Spec or create tracker work as a side effect of setup.
+Check generated paths and links, unresolved placeholders, duplicate authorities,
+and the actual discoverability of each installed skill. Re-running setup must
+reuse existing files and configuration rather than duplicate sections or reset
+decisions. Report the actual files changed, chosen skill sources, working
+capabilities, and concrete remaining setup. A subsequent new-feature request
+should start with grilling and reach a concrete plan without a second interview.

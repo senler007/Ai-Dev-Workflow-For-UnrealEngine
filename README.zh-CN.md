@@ -2,108 +2,104 @@
 
 # Senler Skills
 
-## 文章中提到的三个 Skill
+把项目初始化、需求澄清、方案实施、UE 规范、审查、文档维护和 Figma 任务管家
+放在同一套工作流里。**一条命令把全部 12 个 Skill 装到全局，新项目再用一句话初始化。**
+通用规则全局复用，项目自己的资料留在项目里。
 
-用 **grilling** 把需求问清楚，用 **ask-plan-build** 给出具体方案再实施；
-需要管理 Figma 任务池时，再启用 **figma-task-steward**。
+## 一次安装全部
 
-| Skill | 用途 | 查看原文 |
-| --- | --- | --- |
-| `grilling` | 按决策依赖逐轮提问，每个问题提供建议和取舍，先查清项目事实。 | [SKILL.md](skills/grilling/SKILL.md) |
-| `ask-plan-build` | 一轮最多五个问题，给出具体方案，收到你的回复后按方案和更正实施。 | [SKILL.md](skills/ask-plan-build/SKILL.md) |
-| `figma-task-steward` | 为 Figma 任务建立独立 Codex 会话，管理澄清、项目操作排队、验收和跨天交接。 | [SKILL.md](skills/figma-task-steward/SKILL.md) |
-
-**[安装和首次配置教程](docs/INSTALL.zh-CN.md)**
-
-装有 Node.js/npm 和 Git 时，在终端执行这一条命令：
+安装 Node.js/npm 和 Git 后，在终端执行：
 
 ```bash
-npx skills add senler007/skills --skill grilling ask-plan-build figma-task-steward -a codex -g --copy
+npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
 ```
 
-命令安装仓库默认分支当前版本。更新前先备份同名个人修改版。
-**Figma 管家还需连接 Figma、启用 Codex 会话工具并配置项目入口；安装不会自动配置这些连接或每日自动任务。**
-完整前提与使用示例见[安装教程](docs/INSTALL.zh-CN.md)。
+命令通过 [Skills CLI](https://github.com/vercel-labs/skills) 安装本仓库全部 Skill，
+包含引用文档和辅助脚本。`--global` 表示全局，`--copy` 使用复制方式，无需创建符号链接。
+安装会更新同名全局版本，有个人改动时先保留自己的版本。看不到新 Skill 时重启 Codex。
+安装本身不修改当前项目，也不连接外部账户。
 
-## 原有 Spec / Ticket 工作流
+## 新项目怎么用
 
-仓库也保留下面这套手动选择阶段的工作流。安装上面的三个 Skill 不会连带安装全部旧阶段，
-也不要求你必须按旧阶段使用。
-
-如果你想自己掌控项目，而不是让 AI 把项目搞得一团糟，就用这套工作流。它会让 AI 把自己不清楚的问题问出来，和你一起把每个功能或方案打磨清楚。最后，它会把每项设计决策和代码结构保存在人类能读懂的项目文档里。
-
-这套工作流很大程度上借鉴了 AIHero，但有三个关键变化：
-
-- **维护一套人能读懂的项目文档。** 每个主要模块用一份文档保存长期设计、当前代码结构和维护地图。
-- **流程由你控制。** 什么时候运行哪个阶段由你决定，不让 AI 替你组织整个项目。
-- **想做功能或修改时，随时创建一个 Spec。** 每个 Spec 只是 AI 为这次变更留下的一份简短记录，方便你以后阅读，而不是试图接管整个项目设计的巨型文档。
-
-## 安装和使用
-
-把下面这一句话发给 Codex，安装这套旧工作流使用的九个 Skill：
+在 Codex 打开新项目目录，发送：
 
 ```text
-Use $skill-installer to install setup-senler-skills, grill-with-docs, to-spec, to-tickets, implement, grilling, project-documentation, tdd, and code-review from https://github.com/senler007/skills (each is under skills/).
+使用 $setup-senler-skills 初始化当前项目，使用已经安装的全局 Skill。
+检查并复用已有资料，建立或合并项目文档、文档导航和开发流程。
 ```
 
-安装完成后开始一个新的 Codex 对话，打开你的项目，然后运行：
+AI 会检查当前项目，只问缺失的必要信息，再生成或合并文档。已有项目也用同一句话；
+保留原文档与约定，不重复建一套，不把 Skill 再复制进每个项目。
+如果项目里已有同名 Skill，会核对差异并明确采用哪个来源。
+
+文档按下列职责组织，已有项目沿用自己的路径；有实际内容才建文件：
+
+| 文档 | 内容 |
+| --- | --- |
+| `AGENTS.md` | 项目规则、开发流程、Skill 和文档入口 |
+| `README.md` | 如何运行项目、仓库与资源目录、命名规范 |
+| `Docs/ProjectOverview.md` | 项目简介、核心体验、文档导航、Figma 等参考资料 |
+| `CONTEXT.md` | 项目术语与含义 |
+| `Docs/Worldbuilding.md` | 有世界观需求时维护已确定的设定 |
+| `Docs/Modules/<功能名>.md` | 已有模块的行为、职责、实现与维护入口 |
+
+不用为了凑齐目录建空文档；不默认创建开发日志或独立架构文档。
+
+## 日常开发
+
+新功能或行为变更采用：
 
 ```text
-Use $setup-senler-skills to configure this project so every Skill knows where its docs and tracker live.
+查项目事实 → grilling 澄清 → ask-plan-build 出方案 → 用户确认
+          → 实施与验证 → code-review → 同步已变化的项目文档
 ```
 
-这一步会为当前项目初始化这些 Skill，每个项目只需要运行一次。
+`grilling` 的结论直接交给 `ask-plan-build`，不重新问一轮相同问题。
+需求已经明确时，整理一下结论即可。明确的小改动、已批准方案直接执行。
+UE 任务同时遵循 `unreal-project`。
 
-## 工作流
-
-只运行这次变更真正需要的阶段。调用哪个 Skill、什么时候调用，都由你决定：
-
-1. **把设计聊清楚**：设计还不清楚时运行 `$grill-with-docs`。它用 `$grilling` 澄清决策，等你确认最终汇总后，再把整份结论一次性写进项目文档。
-   - **例子：**“帮我确定完整的回合生命周期。”“和我一起梳理道具卡系统的设计。”
-2. **为这次修改留下记录**：当一个功能或修改已经足够明确时，运行 `$to-spec`。
-3. **拆成真正能做的工作（可选）**：当 Spec 需要独立切片、依赖排序或分批交付时运行 `$to-tickets`，再由你批准拆分结果。
-4. **只实现指定范围**：把 Spec 或一组 Tickets 直接交给 `$implement`。它会测试、同步文档、审查并提交。
-
-任何 Skill 都不会偷偷进入下一阶段。项目控制权始终在你手里
-
-**一个小改动的例子：**
+例如：
 
 ```text
-你说 : [$grill-with-docs] 我需要完善一下决斗
-和AI聊 ...
-你说 : [$to-spec]
-你说 : [$implement]
-得出完整功能人为验收
+使用 $grilling，给这个项目增加保存和切换角色外观方案的功能。
 ```
 
-如果工作较大，就在 `$to-spec` 和 `$implement` 之间运行 `[$to-tickets]`，先由你确认切片和依赖关系。
+之后按问题补充需求、确认具体方案，AI 再实施、验证和收尾。只讨论设计时不会自动开始实现。
 
-## 每个 Skill 是干什么的
-
-### 显式工作流
-
-只有你主动调用时才会运行。
+## 全部 Skill
 
 | Skill | 用途 |
 | --- | --- |
-| `setup-senler-skills` | 告诉其他 Skill 项目的 Tracker 和文档在哪里，不会顺手创建一堆空文件。 |
-| `grill-with-docs` | 用 `$grilling` 澄清决策，等你最终确认后，再把汇总结论一次性写进正确的项目文档。 |
-| `to-spec` | 只为这次修改留下一份简短记录，不把完整项目设计复制进去。 |
-| `to-tickets` | 按需把较大的修改拆成完整纵向切片，等你确认粒度和依赖以后才发布。 |
-| `implement` | 直接实现 Spec 或 Ticket 范围，运行测试和审查，同步长期文档，然后提交。 |
+| `setup-senler-skills` | 为新旧项目初始化文档与流程 |
+| `grilling` | 按决策依赖澄清需求 |
+| `ask-plan-build` | 承接结论，给出方案，批准后实施 |
+| `unreal-project` | UE 的 C++、蓝图、界面、资产与验证规范 |
+| `code-review` | 检查规范、需求和文档，覆盖尚未提交的修改 |
+| `project-documentation` | 维护已确认的项目事实和模块指南 |
+| `figma-task-steward` | 管理 Figma 任务、独立会话、串行写入与交接 |
+| `grill-with-docs` | 澄清后将最终确认的设计写入文档 |
+| `to-spec` | 为单次变更形成简明规格 |
+| `to-tickets` | 把规格拆成可交付的任务 |
+| `implement` | 执行明确选择的 Spec/Ticket 工作流 |
+| `tdd` | 围绕可观察行为进行测试驱动开发 |
 
-### 支持 Skill
+全部一起安装，使用时根据任务调用。原有 Spec/Ticket 流程仍可显式选择，
+只运行这次变更真正需要的阶段，也可以把 Spec 或一组 Tickets 直接交给 `implement`。
+默认功能流程不强制建 Issue、拆 Ticket 或提交 Git。
 
-任务需要时，它们会提供相应纪律。
+## Figma 与 UE 的首次连接
 
-| Skill | 用途 |
-| --- | --- |
-| `grilling` | 每轮只问前提已明确的一小组问题，每题给建议和取舍，再根据回答决定下一轮。 |
-| `project-documentation` | 把每个模块的设计、代码结构和维护地图保存在一份人能读懂的文档里，并把已完成的项目修改写入当天开发记录。 |
-| `tdd` | 通过稳定的公开边界测试行为，而不是测试内部实现细节。 |
-| `code-review` | 分开审查 Standards、Spec 和 Documentation，而且不会修改你的文件。 |
+Figma 管家需要已连接的 Figma 插件、Codex 桌面端的项目与会话工具，以及 Python 3.8+。
+初始化时提供自己项目的 Figma 文件与任务页，明确启用任务协调和需要的写回范围。
+每日自动接班的时间由使用者指定；安装不会自动创建定时任务。
+
+UE 资产操作需要当前项目可用的编辑器集成。缺少连接时会指出具体缺项，
+不影响其他文档和流程的初始化。包里不包含作者的项目链接、账本、私人路径或授权。
+
+完整操作说明见 [安装与使用](docs/INSTALL.zh-CN.md)。更新整套 Skill 时重新执行安装命令；
+它只更新全局包，项目里的规则需要调整时再运行初始化，不覆盖项目自己的资料。
 
 ## 来源
 
-这套工作流很大程度上借鉴了 Matt Pocock 的 AIHero Skills。本仓库使用 MIT 许可、
-独立维护，并且不会自动同步上游。详情见 [`LICENSE`](LICENSE)。
+参考 Matt Pocock 的 AIHero Skills 工作流，由 senler007 独立维护，采用 MIT 许可证。
+保留原作者归属，不自动同步上游。见 [LICENSE](LICENSE)。

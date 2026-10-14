@@ -7,9 +7,11 @@ This skill takes the current conversation context and codebase understanding and
 produces a Spec. Do NOT interview the user — just synthesize what is already
 known.
 
-The issue tracker and project-documentation layout should have been provided by
-`$setup-senler-skills`. Run it first if `issue-tracker.md` or `project-docs.md`
-is missing.
+Read the tracker and documentation map in AGENTS.md or its referenced files.
+A separate issue-tracker.md or project-docs.md is not required. If no publication
+destination is configured, use `$setup-senler-skills` to resolve that missing
+tracker choice for this requested Spec; reuse all other project setup. Do not
+assume that a Git remote alone authorizes choosing its issue tracker.
 
 ## Process
 

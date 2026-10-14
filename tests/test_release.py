@@ -22,6 +22,7 @@ EXPECTED_POLICIES = {
     "project-documentation": True,
     "tdd": True,
     "code-review": True,
+    "unreal-project": True,
 }
 
 

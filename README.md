@@ -2,126 +2,105 @@ English | [简体中文](README.zh-CN.md)
 
 # Senler Skills
 
-## Three Skills from the article
-
-Clarify decisions with **grilling**, review a concrete solution with
-**ask-plan-build**, or explicitly enable **figma-task-steward** to coordinate
-independent task chats from a Figma task board.
-
-| Skill | Purpose | Source |
-| --- | --- | --- |
-| `grilling` | Ask consequential questions in dependency order, with recommendations and tradeoffs. | [SKILL.md](skills/grilling/SKILL.md) |
-| `ask-plan-build` | Ask one round of up to five questions, propose concrete changes, then implement after your response. | [SKILL.md](skills/ask-plan-build/SKILL.md) |
-| `figma-task-steward` | Coordinate clarification, serial project operations, acceptance, and handover in Codex desktop. | [SKILL.md](skills/figma-task-steward/SKILL.md) |
-
-**[中文安装和使用说明](docs/INSTALL.zh-CN.md)**
-
-With Node.js/npm and Git installed, install only these three to your Codex user
-directory using the [Skills CLI](https://github.com/vercel-labs/skills):
-
-```bash
-npx skills add senler007/skills --skill grilling ask-plan-build figma-task-steward -a codex -g --copy
-```
-
-This installs the current default branch. Back up locally edited copies before
-updating the same skill. If installed skills do not appear, restart Codex.
-
-**Figma steward prerequisites:** Codex desktop with project/chat-management tools,
-a connected Figma plugin (including `figma-use`), Python 3.8+, the two companion
-skills above, and project documentation pointing to your Figma file and its
-`每日安排` page. Configure `Docs/ProjectOverview.md`,
-`Docs/agents/issue-tracker.md`, and `Docs/agents/project-docs.md` for your own
-project; use its applicable documentation/coding/Unreal skills when needed.
-Installation does not configure account connections or daily automation. Enable the
-workflow explicitly; it is not a live Figma watcher or an operating-system lock.
-See the [setup guide](docs/INSTALL.zh-CN.md#figma-任务管家的首次配置).
-
-## Existing Spec and Ticket workflows
-
-The rest of this repository also retains the earlier, manually selected workflow
-stages described below. Installing the three skills above does not install all
-of those stages or require you to use them.
-
-If you want to control your own project instead of letting AI turn it into a mess,
-use this workflow. It makes AI ask about what it does not understand and work with
-you until each feature or solution is clear. Finally, it preserves every design
-decision and code structure in human-readable project documentation.
-
-This workflow is largely inspired by AIHero, with three key changes:
-
-- **Human-readable project docs.** Each major module keeps its durable design,
-  current code structure, and maintenance map in one document people can read.
-- **You control the workflow.** You decide which stage runs and when. AI does not orchestrate the project for you.
-- **Create a Spec whenever you want to build or change something.** Each Spec is a small AI-written record you can read later, not a giant document trying to own the whole project.
+A complete, globally installed workflow for project setup, requirements,
+implementation, Unreal development, review, documentation, and Figma task
+coordination. Install all 12 skills once, then initialize each project with one
+prompt. Project facts stay in the project; reusable instructions stay global.
 
 ## Set and Use
 
-Paste this into Codex to install the nine packages used by this earlier workflow:
+With Node.js/npm and Git installed, run:
 
-```text
-Use $skill-installer to install setup-senler-skills, grill-with-docs, to-spec, to-tickets, implement, grilling, project-documentation, tdd, and code-review from https://github.com/senler007/skills (each is under skills/).
+```bash
+npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
 ```
 
-After installation, start a new Codex turn, open your project, and run:
+This uses the [Skills CLI](https://github.com/vercel-labs/skills) to install every
+skill in this repository for Codex, globally, including references and scripts.
+`--copy` avoids symlinks. The command updates same-name installed packages; keep
+personal edits separately. It does not modify a project or connect accounts.
+If skills are not listed, restart Codex. See the [Chinese setup guide](docs/INSTALL.zh-CN.md).
+
+Open a new or existing project in Codex and send:
 
 ```text
-Use $setup-senler-skills to configure this project so every Skill knows where its docs and tracker live.
+Use $setup-senler-skills to initialize this project with all globally installed
+Senler skills. Reuse existing documents and conventions, and configure the
+project's workflow and document map.
 ```
 
-This initializes the Skills for that project and only needs to run once.
+Setup inspects the project, asks only for missing facts, and merges the required
+rules into its AGENTS.md. It does not copy skills into each project. It preserves
+local customizations and identifies same-name local/global conflicts. Re-running
+setup updates existing sections instead of resetting them.
+
+The document map covers AGENTS.md, README.md, Docs/ProjectOverview.md, CONTEXT.md,
+Docs/Worldbuilding.md and established module guides. Only create documents with
+real confirmed content; worldbuilding is optional. Keep existing paths when the
+project uses another layout. No mandatory empty files, daily journal, or tracker.
 
 ## Workflow
 
-Use only the stages your change needs. You decide which Skill runs and when:
-
-1. **Talk the design through** - run `$grill-with-docs` when the design is still unclear. It uses `$grilling` to clarify decisions, then writes the consolidated decisions to project docs only after you confirm the final summary.
-   - **Examples:** "Help me define the full turn lifecycle." "Walk me through the item-card system and clarify its design."
-2. **Create a change record** - run `$to-spec` whenever a feature or change is clear enough to build.
-3. **Break it into real work (optional)** - run `$to-tickets` when the Spec needs independent slices, dependency ordering, or staged delivery, then approve the breakdown.
-4. **Build exactly that scope** - run `$implement` directly with a Spec or a set of Tickets. It tests, updates docs, reviews the result, and commits.
-
-Nothing silently starts the next stage. You stay in control.
-
-**A small change:**
+For new features and behavior changes:
 
 ```text
-You Say     :[$grill-with-docs] I need to flesh out the duel system
-Communicate :Talk it through with AI...
-You Say     :[$to-spec]
-You Say     :[$implement]
-Finally     :Finish with a complete feature ready for human acceptance testing
+Read project facts -> grilling -> ask-plan-build -> approve the plan
+                   -> implement and verify -> code-review -> update stable docs
 ```
 
-For larger work, run `[$to-tickets]` between `$to-spec` and `$implement` so you
-can approve the slices and dependencies first.
+`grilling` resolves consequential decisions; `ask-plan-build` consumes those
+answers without a second interview. Clear requirements need only a brief
+consolidation. Small explicit changes and already approved plans proceed
+directly. Unreal work also applies `unreal-project`.
+
+Example:
+
+```text
+Use $grilling to add saved character appearance presets to this project.
+```
+
+After clarification, Codex presents a concrete plan through `ask-plan-build`.
+After your approval it implements, verifies, reviews, and updates changed facts.
+A design-only discussion does not automatically become implementation.
+
+All older Spec/Ticket skills are also installed. Use only the stages your change needs when you explicitly choose that workflow: `grill-with-docs` records
+confirmed design, `to-spec` creates change scope, `to-tickets` provides optional
+slicing, and `implement` works directly with a Spec or Tickets. Their explicit
+invocation governs their documented publication/commit behavior; the default
+feature workflow does not silently create issues or commits.
 
 ## What Each Skill Does
 
-### Explicit Workflows
-
-These run only when you ask for them.
-
-| Skill | What it does |
+| Skill | Role |
 | --- | --- |
-| `setup-senler-skills` | Tells the Skills where your tracker and project docs live without creating empty junk. |
-| `grill-with-docs` | Uses `$grilling` to clarify decisions, gets final confirmation, then writes the consolidated decisions to the right project document in one pass. |
-| `to-spec` | Creates a small record of one change instead of copying the whole project design. |
-| `to-tickets` | Optionally splits larger work into complete vertical slices and waits for you to approve the plan. |
-| `implement` | Implements a Spec or Ticket scope directly, runs tests and review, updates durable docs, and commits. |
+| [setup-senler-skills](skills/setup-senler-skills/SKILL.md) | Initialize or adapt a project's document map and workflow. |
+| [grilling](skills/grilling/SKILL.md) | Clarify requirements in decision dependency order. |
+| [ask-plan-build](skills/ask-plan-build/SKILL.md) | Turn those answers into a plan and implement after approval. |
+| [unreal-project](skills/unreal-project/SKILL.md) | Apply Unreal code, Blueprint, UI, asset, and verification conventions. |
+| [code-review](skills/code-review/SKILL.md) | Review Standards, Spec, and Documentation, including uncommitted work. |
+| [project-documentation](skills/project-documentation/SKILL.md) | Maintain confirmed project facts and module guides. |
+| [figma-task-steward](skills/figma-task-steward/SKILL.md) | Dispatch task chats, coordinate shared writes, and preserve handovers. |
+| [grill-with-docs](skills/grill-with-docs/SKILL.md) | Clarify a design, then persist its confirmed decisions. |
+| [to-spec](skills/to-spec/SKILL.md) | Create a compact specification for one change. |
+| [to-tickets](skills/to-tickets/SKILL.md) | Split a specification into deliverable slices. |
+| [implement](skills/implement/SKILL.md) | Execute an explicitly selected Spec/Ticket workflow. |
+| [tdd](skills/tdd/SKILL.md) | Develop through behavioral tests at public seams. |
 
-### Supporting Skills
+Installation includes all of them. Invocation follows the task and project
+rules; installing a skill does not force every task through every skill.
 
-These provide discipline when the task needs it.
+Figma coordination additionally uses a connected Figma plugin, Codex desktop
+project/chat tools, and Python 3.8+ for its bundled ledger. Configure your own
+Figma link and explicitly enable coordination. Automatic daily handover needs a
+user-requested schedule. Unreal asset work needs the project's working editor
+integration. Setup reports missing capabilities without blocking unrelated work.
+No personal project data, credentials, ledger, or account authorization is bundled.
 
-| Skill | What it does |
-| --- | --- |
-| `grilling` | Asks small groups of questions whose prerequisites are settled, with a recommendation and tradeoff for each. |
-| `project-documentation` | Keeps each module's design, code structure, and maintenance map in one human-readable guide, then records completed project changes in the daily development record. |
-| `tdd` | Tests behavior through stable public seams instead of testing implementation details. |
-| `code-review` | Reviews Standards, Spec, and Documentation separately without changing your files. |
+Run the same install command to update all skills. It updates global instructions;
+it does not rewrite existing project documents. Run setup in a project to adapt
+its rules when needed. Preserve the Figma runtime ledger outside the package.
 
 ## Credit
 
-Largely inspired by Matt Pocock's AIHero Skills workflow. This repository is MIT
-licensed, independently maintained, and does not automatically sync upstream.
-See [`LICENSE`](LICENSE).
+Inspired by Matt Pocock's AIHero Skills workflow. MIT licensed and independently
+maintained by senler007; no automatic upstream synchronization. See [LICENSE](LICENSE).

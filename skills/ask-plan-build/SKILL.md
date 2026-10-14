@@ -1,18 +1,16 @@
 ---
 name: ask-plan-build
-description: Ask one round of up to five questions, propose a solution, then implement after the user's response. Use when the user requests this ask-plan-build planning and implementation workflow.
+description: Turn clarified feature requirements into a concrete implementation plan and carry it out after approval. Use after grilling or when the user requests a plan; reuse existing answers and approvals.
 ---
 
 ## Ask
 
-Read relevant task context without starting implementation. Ask up to five
-task-specific questions together, numbered consecutively from 1, one distinct
-question per number. Ask only what is needed; do not fill the quota. This is the
-only interview round for the task.
-
-Wait until the asked items are answered or the user explicitly delegates the
-remaining choices. For partial answers, refer back only to the unanswered items;
-do not introduce another question round.
+Use the outcome from `$grilling` as the Ask input. If a new feature or behavior
+change reaches this skill without clarification, run `$grilling` first. Reuse
+the conversation's settled effects, boundaries, acceptance criteria, and
+delegated choices; do not start a second interview. Already approved plans go
+directly to Build. Ask only about a newly discovered material gap, limited to
+the affected scope, and continue independent investigation while awaiting it.
 
 ## Propose
 
@@ -54,9 +52,13 @@ Present the plan and wait for the user's response before implementing.
 
 ## Build
 
-After the response, incorporate actionable corrections and implement the plan
+After approval, incorporate actionable corrections and implement the plan
 without another confirmation. If the user instead rejects the plan, asks a
 question or requests a rewritten proposal, or postpones implementation, address
 that request and remain at the proposal stage until they respond again.
 
-Complete the implementation and relevant validation, then report the result.
+Complete the implementation and relevant validation. Use `$code-review` on the
+task's changes, correct findings within the approved scope, and verify affected
+behavior. Use `$project-documentation` when stable behavior or maintenance
+entry points changed. Report actual results and remaining checks. Do not commit,
+push, or publish unless requested or explicitly required by the invoked workflow.

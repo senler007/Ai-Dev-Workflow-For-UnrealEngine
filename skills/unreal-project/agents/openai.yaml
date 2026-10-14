@@ -1,0 +1,6 @@
+interface:
+  display_name: "Unreal Project"
+  short_description: "Apply Unreal code, UI, asset and verification rules"
+  default_prompt: "Use $unreal-project for this Unreal task and follow the current project's conventions."
+policy:
+  allow_implicit_invocation: true
