@@ -1,9 +1,14 @@
 English | [简体中文](README.zh-CN.md)
 
-# Senler Skills
+# AI-Dev-Workflow-For-UE
 
-This is an AI collaboration workflow I put together during game development, and I plan to keep using it in future projects.
-As a project grows, if requirements and documentation don't have clearly defined responsibilities, AI tends to ask the same questions over and over and shit out documentation all over the place. These skills standardize where documents go, how requirements are clarified, how plans are made, and how finished work is checked, covering a complete UE project development pipeline.
+This is a streamlined AI collaboration workflow I put together during game development, and I plan to keep using it in future projects.
+It mainly addresses two things:
+
+1. Making document locations and responsibilities clear.
+2. Keeping the development workflow consistent and reducing errors.
+
+As a project grows, unclear documentation and an unclear process for turning requirements into features make it easy for AI to dump shit everywhere. These skills standardize where documents go, how requirements are clarified, how plans are made, and how finished work is checked, covering a simple UE project development pipeline.
 
 ## Installation and initialization
 
@@ -19,14 +24,13 @@ Then open a new project in Codex and send this:
 Use $setup-senler-skills to initialize this project.
 ```
 
-A project needs clear documentation conventions, or things get painful later. AI will dump shit everywhere, so I use a common structure for organizing documents here.
-
 ## Essential project documents for game development
 
-Use the following document structure with this skill set. All paths are relative to your own project root.
+A project needs clear documentation conventions, or things get painful later.
+Use the following shared document structure with my skill set. All paths are relative to your own project root.
 
 - `Docs/ProjectOverview.md`: Project introduction, core experience, document navigation, and other important references, such as Figma.
-- `AGENTS.md`: Team working rules, development workflow, and skill entry points.
+- `AGENTS.md`: Team working rules, development workflow, and rules for using skills.
 - `README.md`: Repository overview, resource directories, naming, and asset management conventions.
 - `CONTEXT.md`: Project terminology and its meanings.
 - `Docs/Worldbuilding.md`: Worldbuilding (optional; generally for lore and other narrative material).
@@ -34,7 +38,7 @@ Use the following document structure with this skill set. All paths are relative
 
 ## From requirements to implementation
 
-**Whatever the requirement, you only need to invoke one skill: use $grilling when you describe what you want. It will keep asking about the unclear parts of your requirements. Use it for anything a bit bigger to avoid rework.** The other skills are invoked automatically; you don't need to invoke them yourself.
+**Whatever the requirement, you only need to invoke one skill: use $grilling when you describe what you want. It will keep asking about the unclear parts of your requirements. You can use it for any feature to avoid rework or results you're unhappy with.** The other skills are invoked automatically; you don't need to invoke them yourself. If you're curious, here's what they do.
 
 | Skill | What it does |
 | --- | --- |
