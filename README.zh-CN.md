@@ -8,7 +8,7 @@
 ## 安装与初始化
 先用指令 : 
 ```sh
-npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
+npx --yes skills add senler007/Ai-Dev-Workflow --skill '*' --agent codex --global --copy --yes
 ```
 然后在 Codex 打开新项目，发送下面这句话
 

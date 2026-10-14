@@ -10,7 +10,7 @@ As a project grows, unclear requirements and scattered documents lead to repeate
 With Node.js 22.20+ and Git installed, one command installs all seven skills:
 
 ```sh
-npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
+npx --yes skills add senler007/Ai-Dev-Workflow --skill '*' --agent codex --global --copy --yes
 ```
 
 Install globally once and share the skills across projects, without project-local copies. Updates replace matching skills, so preserve your own edits first.
