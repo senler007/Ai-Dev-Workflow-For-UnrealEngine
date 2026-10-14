@@ -2,87 +2,64 @@ English | [简体中文](README.zh-CN.md)
 
 # Senler Skills
 
-If you want to control your own project instead of letting AI turn it into a mess,
-use this workflow. It makes AI ask about what it does not understand and work with
-you until each feature or solution is clear. Finally, it preserves every design
-decision and code structure in human-readable project documentation.
+An AI collaboration workflow I put together while developing a game, and intend to reuse in future projects.
+As a project grows, unclear requirements and scattered documents lead to repeated questions and rework. These skills give documentation, clarification, planning, implementation, and review a shared structure.
 
-This workflow is largely inspired by AIHero, with three key changes:
+## Install and initialize
 
-- **Human-readable project docs.** Each major module keeps its durable design,
-  current code structure, and maintenance map in one document people can read.
-- **You control the workflow.** You decide which stage runs and when. AI does not orchestrate the project for you.
-- **Create a Spec whenever you want to build or change something.** Each Spec is a small AI-written record you can read later, not a giant document trying to own the whole project.
+With Node.js 22.20+ and Git installed, one command installs all seven skills:
 
-## Set and Use
-
-Paste this into Codex to install all ten Skills:
-
-```text
-Use $skill-installer to install all ten Skills from https://github.com/senler007/skills.
+```sh
+npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
 ```
 
-After installation, start a new Codex turn, open your project, and run:
+Install globally once and share the skills across projects, without project-local copies. Updates replace matching skills, so preserve your own edits first.
+
+Open a new project in Codex and send this, together with its name, purpose, and core experience:
 
 ```text
-Use $setup-senler-skills to configure this project so every Skill knows where its docs and tracker live.
+Use $setup-senler-skills to initialize this project.
 ```
 
-This initializes the Skills for that project and only needs to run once.
+It creates project documents and workflow rules, preserving and completing existing content. When joining a project that already uses this workflow, install the skills, sync the latest project files, and start a new Codex conversation. No reinitialization is needed.
 
-## Workflow
+## Project documents
 
-Use only the stages your change needs. You decide which Skill runs and when:
+This skill set uses the following fixed structure. All paths are relative to your project root.
 
-1. **Talk the design through** - run `$grill-with-docs` when the design is still unclear. It asks dependency-ready decisions in focused rounds, then writes the consolidated decisions to project docs only after you confirm the final summary.
-   - **Examples:** "Help me define the full turn lifecycle." "Walk me through the item-card system and clarify its design."
-2. **Create a change record** - run `$to-spec` whenever a feature or change is clear enough to build.
-3. **Break it into real work (optional)** - run `$to-tickets` when the Spec needs independent slices, dependency ordering, or staged delivery, then approve the breakdown.
-4. **Build exactly that scope** - run `$implement` directly with a Spec or a set of Tickets. It tests, updates docs, reviews the result, and commits.
+- `Docs/ProjectOverview.md`: Project introduction, core experience, document navigation, and references such as Figma.
+- `AGENTS.md`: Team rules, workflow, skill entry points, and project-specific commands.
+- `README.md`: How to run the project, resource directories, naming, and asset management.
+- `CONTEXT.md`: Project terminology and definitions.
+- `Docs/Worldbuilding.md`: World and character information, when needed.
+- `Docs/Modules/<feature>.md`: Design, responsibilities, implementation, and maintenance for actual modules, created as needed.
 
-Nothing silently starts the next stage. You stay in control.
+Maintain each fact in one place. See [project-documentation](skills/project-documentation/SKILL.md) for the detailed rules.
 
-**A small change:**
+## Working on a feature
 
-```text
-You Say     :[$grill-with-docs] I need to flesh out the duel system
-Communicate :Talk it through with AI...
-You Say     :[$to-spec]
-You Say     :[$implement]
-Finally     :Finish with a complete feature ready for human acceptance testing
-```
+**Start a new feature with `$grilling` to clarify the requirements.** It asks about real uncertainties to reduce rework. When the requirements are already clear, it summarizes them without inventing more questions.
 
-For larger work, run `[$to-tickets]` between `$to-spec` and `$implement` so you
-can approve the slices and dependencies first.
-
-## What Each Skill Does
-
-### Explicit Workflows
-
-These run only when you ask for them.
+`ask-plan-build` then uses those answers to propose concrete changes and implements them after approval. Review the changes and update affected documentation before finishing. Reuse existing answers and approvals; clear small edits proceed directly.
 
 | Skill | What it does |
 | --- | --- |
-| `setup-senler-skills` | Configures GitHub, GitLab, local, or custom tracking plus project-doc paths without creating empty junk. |
-| `grill-with-docs` | Runs dependency-safe design rounds, gets final confirmation, then writes the consolidated decisions to the right project document in one pass. |
-| `to-spec` | Creates a small record of one change instead of copying the whole project design. |
-| `to-tickets` | Optionally splits larger work into complete vertical slices and waits for you to approve the plan. |
-| `implement` | Implements a Spec or Ticket scope, tests and reviews the complete task delta, updates durable docs, and commits only after verifying that user changes are not mixed in. |
+| `setup-senler-skills` | Initialize project documents and workflow rules. |
+| `grilling` | Clarify requirements, boundaries, and acceptance criteria. |
+| `ask-plan-build` | Turn clarified requirements into a plan and implement after approval. |
+| `unreal-project` | Apply UE rules for C++/Blueprint responsibilities, resources, asset operations, and verification. |
+| `code-review` | Check changes against requirements and project rules. |
+| `project-documentation` | Keep project documentation consistent with implementation. |
+| `figma-task-steward` | Coordinate Figma tasks through dedicated chats, serialized implementation, and handoffs. |
 
-### Supporting Skills
+You do not need to name every skill each time; use them according to project rules and task needs. UE rules apply only to UE projects. To use the Figma steward, connect Figma tools, have Python 3 available, and record the file in Docs/ProjectOverview.md. Then ask:
 
-These provide discipline when the task needs it.
+```text
+Use $figma-task-steward to manage this project's Figma daily tasks, create dedicated task chats, and coordinate execution.
+```
 
-| Skill | What it does |
-| --- | --- |
-| `grilling` | Maps a design tree and asks only the dependency-ready decision frontier in each focused round. |
-| `project-documentation` | Keeps each module's design, code structure, and maintenance map in one human-readable guide, then records completed project changes in the daily development record. |
-| `fix-bug` | Repairs defects from evidence: reproduces the symptom, traces the first wrong state, fixes the earliest confirmed source, and leaves regression evidence. It can activate implicitly when you ask for a bug to be fixed. |
-| `tdd` | Tests behavior through stable public seams instead of testing implementation details. |
-| `code-review` | Reviews committed, staged, unstaged, and untracked changes across Standards, Spec, and Documentation without changing files. |
+Installation does not start a steward or create a schedule. Keep project coordination authorization and handoff arrangements in AGENTS.md.
 
-## Credit
+---
 
-Largely inspired by Matt Pocock's AIHero Skills workflow. This repository is MIT
-licensed, independently maintained, and does not automatically sync upstream.
-See [`LICENSE`](LICENSE).
+Inspired by Matt Pocock's AIHero Skills and independently maintained by senler007 under the [MIT license](LICENSE).

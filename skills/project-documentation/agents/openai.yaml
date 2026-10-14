@@ -1,6 +1,0 @@
-interface:
-  display_name: "Project Documentation"
-  short_description: "Maintain module guides and daily records"
-  default_prompt: "Use $project-documentation to maintain human-readable module guides and update today's development record after project changes."
-policy:
-  allow_implicit_invocation: true

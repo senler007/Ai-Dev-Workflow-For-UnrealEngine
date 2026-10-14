@@ -1,6 +1,0 @@
-interface:
-  display_name: "To Tickets"
-  short_description: "Publish approved vertical-slice tickets"
-  default_prompt: "Use $to-tickets to split this Spec into approved tracer-bullet Tickets."
-policy:
-  allow_implicit_invocation: false

@@ -1,91 +1,54 @@
 ---
 name: setup-senler-skills
-description: Configure a repository for the Senler workflow, including GitHub, GitLab, local, or custom tracking and project-documentation paths. Use only when the user explicitly asks for setup or reconfiguration.
+description: 按 Senler 固定文档架构初始化新项目，或补齐当前项目的接入配置。用户要求一键初始化、建立项目文档和开发流程时使用；使用已安装的本地 Skill，不从远程恢复旧版。
 ---
 
-# Setup Senler Skills
+# 一次初始化项目
 
-Configure the repository once without replacing conventions that already work.
-This skill is explicit-only: never run it merely because another workflow skill
-is being used.
+使用当前安装的 [project-documentation](../project-documentation/SKILL.md) 作为文档架构权威，使用本包的 [初始化内容](references/project-initialization.md) 组织正文。初始化只建立项目文档和工作规则，不创建游戏工程、产品功能或自动任务，不提交或推送。
 
-## Inspect the repository
+用户要求初始化已经授权本次所需的文档创建和规则配置，直接完成，不为选目录、建文件或写规则再次审批。只询问无法从当前资料得到的项目事实，或会丢失已有内容的真实冲突。不运行完整的功能 grilling / ask-plan-build 流程来审批初始化本身。
 
-Read only enough context to locate:
+## 确定项目与输入
 
-- the repository root and Git remote;
-- existing agent instruction files such as `AGENTS.md` or `CLAUDE.md`;
-- existing project overview, glossary, module guides, ADR, and tracker documentation;
-- any existing daily development-record convention;
-- the established documentation directory casing and project language.
+1. 以用户在当前会话打开或明确指定的工作目录为项目根目录，不以 Skill 安装目录、技能源码仓库或其他项目为根目录。目标目录存在实质歧义时先确认目标，不能初始化技能仓库自身。
+2. 读取目标根目录适用的 `AGENTS.md` 和固定位置的现有文档；检查当前工程标识、内容目录及已配置工具，取得真实项目事实。只核查本次初始化需要的信息，不做完整代码审计、不加载编辑器资产。
+3. 项目名称、用途与核心体验是概览的必要输入。用户已提供时直接使用；能从当前项目明确确认时自行获取。空目录无法判断用途时，集中询问这些缺项一次。不要按文件夹名称编造游戏类型、玩法或世界观，也不追问无关的未来功能。
+4. 确认已安装的 `grilling`、`ask-plan-build`、`code-review`、`project-documentation`、`unreal-project`、`figma-task-steward` 可用。使用当前本地版本，不拉取 GitHub、不安装或恢复旧技能。缺少哪个就准确指出哪个，仍完成不受影响的文档工作，不宣称整套已经就绪。
 
-Existing paths, casing, terminology, and language take precedence over the
-defaults in this skill. Do not create parallel files for roles that already have
-an authoritative owner.
+## 固定输出
 
-## Confirm the configuration
+所有输出均相对于目标项目根目录，文件名和大小写固定：
 
-Summarize what was found, then confirm choices that cannot be inferred safely:
+- `AGENTS.md`
+- `README.md`
+- `CONTEXT.md`
+- `Docs/ProjectOverview.md`
 
-1. **Tracker mode.** Recommend GitHub or GitLab when the Git remote identifies
-   that host; otherwise recommend local. Also support a custom tracker.
-2. **Agent instruction file.** Update an existing instruction file. If none
-   exists, ask before creating one and recommend `AGENTS.md` for Codex-first use.
-3. **Project-document locations.** Reuse existing owners. For missing roles,
-   propose a project overview, glossary, module-guide directory or naming
-   convention, and ADR directory, adapting names and casing to the repository.
-   Module guides co-locate Design, Architecture, and Maintenance Map sections;
-   do not propose a standalone Architecture document.
-4. **Development record.** Reuse an existing dated task journal. When none exists,
-   propose `docs/DevelopmentRecord/YYYY-MM-DD.md`, adapting directory casing to
-   the repository.
-5. **Document language.** Infer it from durable project documentation and ask
-   only when mixed usage leaves the answer ambiguous.
+按 `project-documentation` 的职责填入已确认内容。其余按实际需求处理：有已确认的世界观内容才创建 `Docs/Worldbuilding.md`；有实际模块且新指南已获用户要求或批准才创建 `Docs/Modules/<功能名>.md`。不创建空模块目录、空章节、TODO 占位或猜测内容。
 
-Show the exact files and substantive configuration before writing, then wait for
-the user's explicit approval. Do not create empty project, glossary, module-guide,
-or ADR documents during setup.
+不提供替代目录选项，不搜索其他布局作为兼容入口。已有项目也按这套固定位置接入；不得为了满足结构而擅自删除其他资料。遇到固定位置已经存在的内容，保留事实和人工说明，只合并缺失的规则、导航及已确认更新。
 
-## Write the configuration
+## 写入工作流程
 
-Use the applicable tracker reference:
+从初始化内容中的规则生成项目自己的 `AGENTS.md`：
 
-- GitHub: [references/issue-tracker-github.md](references/issue-tracker-github.md)
-- GitLab: [references/issue-tracker-gitlab.md](references/issue-tracker-gitlab.md)
-- Local: [references/issue-tracker-local.md](references/issue-tracker-local.md)
-- Custom: [references/issue-tracker-custom.md](references/issue-tracker-custom.md)
+- 新功能或行为变更先使用 `grilling`，再由 `ask-plan-build` 承接结论、形成方案，确认后实施；明确的小改动和已批准方案直接执行。
+- 已有答案和批准不重复询问；先调查已有功能并复用完整公共流程。
+- Unreal 任务使用 `unreal-project`；非 UE 项目不写入 UE 专有约束和命令。
+- 逻辑改动完成后使用 `code-review`；稳定行为和维护入口变化时使用 `project-documentation`。
+- 固定文档路径与职责；不生成每日记录或独立架构文档，不恢复已删除的旧配置。
 
-Create or update two small agent-facing configuration files in the repository's
-existing agent-documentation directory. Prefer `docs/agents/` only when the
-repository has no established location:
+Skill 默认引用已安装的全局版本，不复制进新项目，不把某台电脑的安装绝对路径写进项目规则。若固定项目位置已有同名本地 Skill，保留它们，并核对既有来源声明；不声称已经切换为全局版、不删除用户定制，也不把两份同名内容混合执行。
 
-- `issue-tracker.md`, based on the selected tracker reference;
-- `project-docs.md`, based on
-  [references/project-docs.md](references/project-docs.md).
+项目专用引擎版本、已验证的工具与命令写入 `AGENTS.md`；资源目录、命名和资产版本规则写入 `README.md`。没有实际工具或命令就不写虚构命令。Figma 管家随整套安装提供；用户启用时使用 `figma-task-steward`，已有协调授权及范围记录在 `AGENTS.md`。Figma 参考链接仅在用户提供且与本项目相关时进入概览；初始化不导入其他项目的授权、账户链接、账本、会话、日程或自动启用管家。
 
-Add a concise `## Senler skills` section to the confirmed agent instruction file.
-It should tell future agents where those two configurations live and to follow
-them, including the configured daily development record. Merge with an existing
-section instead of duplicating it.
+## 重复运行与检查
 
-Record actual repository-specific values, not unresolved placeholders. Avoid
-copying the detailed document-role rules into multiple files; the configuration
-should map roles to paths and defer maintenance behavior to
-`$project-documentation`.
+- 逐文件核对已有内容，按职责合并；相同规则不重复插入，人工内容不被整篇替换。无需变化的文件不写入。
+- 检查四份必需文件真实存在且有已确认内容；没有业务专有词汇时使用初始化内容中已经明确的工作流术语，不建立空术语表。
+- 概览导航只链接实际存在的文档。可选文档没有生成时不留下断链。项目名称、引擎版本、实际路径和引用保持一致。
+- 检查规则是否确实为 grilling → ask-plan-build，是否仍混入旧版固定轮数/题数、Tracker 配置文件或额外审批。
+- 报告实际创建、更新和保留的文件、所用 Skill 来源及具体未完成项。只完成文档初始化时，不声称引擎工程、Figma 连接或运行验证已完成。
 
-Re-read the written maps and agent-instruction section. Confirm that every path
-is discoverable from the agent instructions, no unresolved repository-specific
-placeholder remains, the chosen tracker has explicit ready/done states, and
-rerunning setup would update the same blocks rather than create duplicates.
-Documented runtime variables such as `<feature>` and `<ticket>` may remain when
-the downstream workflow supplies them for each piece of work.
-
-## Finish
-
-Use `$project-documentation` to record the completed setup in the configured
-development record.
-
-Report the tracker mode, configuration files, instruction file, document
-language, development-record path, reused authorities, and proposed-but-uncreated
-module-guide convention. Call out any ambiguity left for the user. Do not start
-a Spec or create tracker work as a side effect of setup.
+完成后用户可直接提出新功能，按已写入的流程处理；本次初始化不要自行开始实现功能。

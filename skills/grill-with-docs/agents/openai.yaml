@@ -1,6 +1,0 @@
-interface:
-  display_name: "Grill with Docs"
-  short_description: "Grill, confirm, then sync project docs"
-  default_prompt: "Use $grill-with-docs to resolve this design, get final confirmation, then synchronize the confirmed decisions to project documentation in one pass."
-policy:
-  allow_implicit_invocation: false

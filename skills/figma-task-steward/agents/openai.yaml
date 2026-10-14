@@ -1,0 +1,4 @@
+interface:
+  display_name: "Figma 任务管家"
+  short_description: "逐卡启动独立澄清，静态调查并行，写入与编辑器串行，保留跨天交接"
+  default_prompt: "使用 $figma-task-steward 管理 Figma 每日安排：逐卡澄清，静态读取源码和文档直接并行，写入/构建/编辑器操作串行；已授权工作持续做，无可继续工作即安全释放并实际派下一项，不重复确认或轮询。"

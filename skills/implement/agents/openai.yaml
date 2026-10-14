@@ -1,6 +1,0 @@
-interface:
-  display_name: "Implement"
-  short_description: "Implement scoped work validate and commit"
-  default_prompt: "Use $implement to complete this Spec or Ticket scope, review the result, and commit it."
-policy:
-  allow_implicit_invocation: false

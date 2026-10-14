@@ -1,6 +1,0 @@
-interface:
-  display_name: "Grilling"
-  short_description: "Resolve dependency-ready design decisions"
-  default_prompt: "Use $grilling to stress-test this design through dependency-safe frontier rounds."
-policy:
-  allow_implicit_invocation: true

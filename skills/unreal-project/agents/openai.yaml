@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unreal 项目规范"
+  short_description: "遵循 Unreal 职责边界、蓝图表现、固定文档与资产安全规则"
+  default_prompt: "使用 $unreal-project 完成当前 Unreal 任务，并执行与改动风险匹配的验证。"
