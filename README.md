@@ -2,7 +2,7 @@ English | [简体中文](README.zh-CN.md)
 
 # Senler Skills
 
-Six skills based on the current local versions. New features and behavior
+Seven skills based on the current local versions. New features and behavior
 changes follow `grilling` -> `ask-plan-build` -> approved implementation,
 verification, review, and updates to changed durable documentation. Reuse settled
 answers and approvals; clear small edits proceed directly.
@@ -10,6 +10,7 @@ answers and approvals; clear small edits proceed directly.
 | Skill | Purpose |
 | --- | --- |
 | `setup-senler-skills` | Initialize a project with the fixed document structure and current local skills. |
+| `figma-task-steward` | Coordinate Figma tasks across dedicated chats, serialized implementation, acceptance, and handoffs. |
 | `grilling` | Clarify consequential decisions and consolidate outcomes, boundaries, and acceptance. |
 | `ask-plan-build` | Consume the clarified requirements, propose concrete changes, and implement after approval. |
 | `unreal-project` | Apply Unreal ownership, C++/Blueprint, UI, asset, and verification rules. |
@@ -24,7 +25,7 @@ Install Node.js 22.20 or newer and Git, then run:
 npx --yes skills add senler007/skills --skill '*' --agent codex --global --copy --yes
 ```
 
-This installs all six current packages globally for Codex, shared across projects.
+This installs all seven current packages globally for Codex, shared across projects.
 GitHub is the distribution source; Codex reads the installed local files. Projects
 do not need their own copies. The command updates matching global skills, so
 preserve unpublished local edits first. It does not uninstall previously installed
@@ -76,7 +77,7 @@ or restore deleted configuration. The maintenance authority is
 
 ## Use
 
-Install all six complete directories under `skills/` into your agent's skill
+Install all seven complete directories under `skills/` into your agent's skill
 directory; they can be shared globally. Include their existing references and
 metadata. Keep consumer-project documents in each project. This repository's
 root AGENTS.md governs skill maintenance, not the consumer project's workflow.
@@ -96,6 +97,12 @@ version-specific failure guidance and apply it under its stated conditions.
 
 The workflow does not automatically commit or push. Publication, cross-chat
 messages, and task coordination require the user's applicable authorization.
+
+## Figma task coordination
+
+The all-skills command includes `figma-task-steward`. Connect Figma read/write tools, have Python 3 available, and record the actual Figma file in Docs/ProjectOverview.md. Codex supplies independent-chat and messaging tools. Record the project scope, coordination authorization, and any daily handoff schedule in AGENTS.md.
+
+To start, ask: `Use $figma-task-steward to manage this project’s Figma daily tasks, create dedicated task chats, and coordinate execution.` Installation and document initialization alone do not activate a steward or create a schedule.
 
 ## Credit
 

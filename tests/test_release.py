@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ROOT / "skills"
 EXPECTED_POLICIES = {
     "setup-senler-skills": True,
+    "figma-task-steward": True,
     "ask-plan-build": True,
     "grilling": True,
     "unreal-project": True,
