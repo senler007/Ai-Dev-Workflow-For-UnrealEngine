@@ -1,6 +1,6 @@
 [English](README.md) | 简体中文
 
-# AI-Dev-Workflow-For-UE
+# Ai-Dev-Workflow-For-UnrealEngine
 
 这是我在游戏开发中整理的一套精简的AI协作流程，也准备继续用在后面的项目里。
 主要解决 : 
@@ -12,7 +12,7 @@
 ## 安装与初始化
 先用指令 : 
 ```sh
-npx --yes skills add senler007/Ai-Dev-Workflow --skill '*' --agent codex --global --copy --yes
+npx --yes skills add senler007/Ai-Dev-Workflow-For-UnrealEngine --skill '*' --agent codex --global --copy --yes
 ```
 然后在 Codex 打开新项目，发送下面这句话
 

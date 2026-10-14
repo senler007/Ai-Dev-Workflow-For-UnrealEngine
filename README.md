@@ -1,6 +1,6 @@
 English | [简体中文](README.zh-CN.md)
 
-# AI-Dev-Workflow-For-UE
+# Ai-Dev-Workflow-For-UnrealEngine
 
 This is a streamlined AI collaboration workflow I put together during game development, and I plan to keep using it in future projects.
 It mainly addresses two things:
@@ -15,7 +15,7 @@ As a project grows, unclear documentation and an unclear process for turning req
 First, run this command:
 
 ```sh
-npx --yes skills add senler007/Ai-Dev-Workflow --skill '*' --agent codex --global --copy --yes
+npx --yes skills add senler007/Ai-Dev-Workflow-For-UnrealEngine --skill '*' --agent codex --global --copy --yes
 ```
 
 Then open a new project in Codex and send this:
