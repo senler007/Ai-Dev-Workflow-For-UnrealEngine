@@ -24,6 +24,8 @@ Then open a new project in Codex and send this:
 Use $setup-senler-skills to initialize this project.
 ```
 
+The installation command installs the skills; initialization then creates or updates the core project documents and configures the development workflow to use them. Existing content is preserved, and worldbuilding and module documents are added only when needed. These rules guide future work and help keep the project organized.
+
 ## Essential project documents for game development
 
 A project needs clear documentation conventions, or things get painful later.

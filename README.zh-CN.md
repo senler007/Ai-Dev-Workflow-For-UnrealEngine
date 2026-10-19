@@ -19,6 +19,7 @@ npx --yes skills add senler007/Ai-Dev-Workflow-For-UnrealEngine --skill '*' --ag
 ```text
 使用 $setup-senler-skills 初始化当前项目。
 ```
+执行完后,6个Skill和所有文档架构都会调整好并且后续也不会乱
 
 ## 做游戏必需的项目文档
 项目一定要有明确的文档风格,不然后面会很痛苦.
